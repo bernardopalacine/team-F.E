@@ -500,9 +500,9 @@
         <p>Para alunos com domínio técnico e experiência em jogo. Foco em performance, estratégia, tomada de decisão, intensidade e competitividade.</p>
       </div>
       <div class="level-card lv-feminina">
-        <span class="level-tag">Exclusiva</span>
+        <span class="level-tag">Exclusiva · Sextas</span>
         <h3>Feminina</h3>
-        <p>Aula exclusiva para mulheres. Foco em evolução técnica, confiança, integração e desenvolvimento no futevôlei.</p>
+        <p>Turma exclusiva para mulheres, nos mesmos níveis Iniciante, Intermediária e Avançada — só que às sextas-feiras.</p>
       </div>
     </div>
   </section>
@@ -511,7 +511,7 @@
     <div class="section-head reveal">
       <div class="section-eyebrow">Agenda semanal</div>
       <h2 class="section-title">Todas as aulas com o <span>Prof. Edu</span></h2>
-      <p class="section-desc">De segunda a sexta-feira, três turmas por dia — mais a turma feminina às sextas.</p>
+      <p class="section-desc">De segunda a sexta-feira, três turmas por dia — às sextas, as turmas são exclusivas para o público feminino.</p>
     </div>
     <div class="schedule-strip reveal">
       <div class="schedule-strip-top">
@@ -542,8 +542,10 @@
           <div class="mini-slot"><b>15:30–16:30</b>Intermediária</div>
           <div class="mini-slot"><b>16:30–17:30</b>Avançada</div>
         </div>
-        <div class="day-mini"><h4>Sexta</h4>
-          <div class="mini-slot"><b>15:30–16:30</b>Feminina</div>
+        <div class="day-mini"><h4>Sexta · Feminina</h4>
+          <div class="mini-slot"><b>14:30–15:30</b>Feminina Iniciante</div>
+          <div class="mini-slot"><b>15:30–16:30</b>Feminina Intermediária</div>
+          <div class="mini-slot"><b>16:30–17:30</b>Feminina Avançada</div>
         </div>
       </div>
     </div>
@@ -748,7 +750,7 @@
           <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
           <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
           <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
-          <div class="agenda-day-col"><div class="skeleton skeleton-card"></div></div>
+          <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
         </div>
       </div>
 
@@ -759,7 +761,7 @@
           <div class="level-card lv-iniciante"><span class="level-tag">Nível 1</span><h3>Iniciante</h3><p>Para alunos que estão começando no futevôlei. Foco em fundamentos básicos, controle de bola, posicionamento e primeiros movimentos.</p></div>
           <div class="level-card lv-intermediaria"><span class="level-tag">Nível 2</span><h3>Intermediária</h3><p>Para alunos que já possuem noção dos fundamentos. Foco em evolução técnica, recepção, passe, ataque, defesa e leitura de jogo.</p></div>
           <div class="level-card lv-avancada"><span class="level-tag">Nível 3</span><h3>Avançada</h3><p>Para alunos com domínio técnico e experiência em jogo. Foco em performance, estratégia, tomada de decisão, intensidade e competitividade.</p></div>
-          <div class="level-card lv-feminina"><span class="level-tag">Exclusiva</span><h3>Feminina</h3><p>Aula exclusiva para mulheres. Foco em evolução técnica, confiança, integração e desenvolvimento no futevôlei.</p></div>
+          <div class="level-card lv-feminina"><span class="level-tag">Exclusiva · Sextas</span><h3>Feminina</h3><p>Turma exclusiva para mulheres, nos mesmos níveis Iniciante, Intermediária e Avançada — só que às sextas-feiras.</p></div>
         </div>
       </div>
 
@@ -870,11 +872,12 @@
         </div>
         <div class="panel">
           <div class="panel-head"><h3>Visão geral da semana</h3></div>
+          <div class="sub" style="margin:-10px 0 16px;">Turmas de sexta-feira são a versão feminina de cada nível.</div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Dia</th><th>Iniciante</th><th>Intermediária</th><th>Avançada</th><th>Feminina</th></tr></thead>
+              <thead><tr><th>Dia</th><th>Iniciante</th><th>Intermediária</th><th>Avançada</th></tr></thead>
               <tbody id="tbody-visao-semana">
-                <tr><td colspan="5" style="color:rgba(30,43,43,.5);">—</td></tr>
+                <tr><td colspan="4" style="color:rgba(30,43,43,.5);">—</td></tr>
               </tbody>
             </table>
           </div>
@@ -944,7 +947,7 @@
               <option value="iniciante">Todos da Turma Iniciante</option>
               <option value="intermediaria">Todos da Turma Intermediária</option>
               <option value="avancada" selected>Todos da Turma Avançada</option>
-              <option value="feminina">Todos da Turma Feminina</option>
+              <option value="feminina">Todas as Turmas Femininas (sextas)</option>
             </select>
           </div>
           <div class="field"><label>Tipo de notificação</label>
@@ -1315,7 +1318,8 @@
 
         const vagasLivres = turma.capacidade_max - (count ?? 0)
         const meuAgendamento = meusAgendamentos?.find(a => a.turma_id === turma.id && a.data === dataDoDia)
-        const nivelClasse = turma.nivel === 'iniciante' ? '' : `lv-${turma.nivel}`
+        const ehFeminina = turma.publico === 'feminina'
+        const nivelClasse = ehFeminina ? 'lv-feminina' : (turma.nivel === 'iniciante' ? '' : `lv-${turma.nivel}`)
 
         let botao, meta, metaClasse = 'slot-meta'
         if (meuAgendamento) {
@@ -1339,7 +1343,7 @@
 
         return `<div class="slot-card ${nivelClasse}">
           <div class="slot-time">${turma.hora_inicio.slice(0,5)} – ${turma.hora_fim.slice(0,5)}</div>
-          <div class="slot-level">Turma ${NIVEL_LABEL[turma.nivel]}</div>
+          <div class="slot-level">Turma ${NIVEL_LABEL[turma.nivel]}${ehFeminina ? ' · Feminina' : ''}</div>
           <div class="${metaClasse}">${meta}</div>
           ${botao}
         </div>`
@@ -1753,7 +1757,7 @@
     if (error) { console.error(error); return }
 
     select.innerHTML = turmas.map(t =>
-      `<option value="${t.id}">${DIA_LABEL[t.dia_semana]} · ${t.hora_inicio.slice(0,5)} · ${NIVEL_LABEL[t.nivel]}</option>`
+      `<option value="${t.id}">${DIA_LABEL[t.dia_semana]} · ${t.hora_inicio.slice(0,5)} · ${NIVEL_LABEL[t.nivel]}${t.publico === 'feminina' ? ' · Feminina' : ''}</option>`
     ).join('')
 
     select.dataset.turmas = JSON.stringify(turmas)
@@ -1837,7 +1841,7 @@
 
     const { data: turmas } = await supabase.from('turmas').select('*')
     const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta']
-    const niveis = ['iniciante', 'intermediaria', 'avancada', 'feminina']
+    const niveis = ['iniciante', 'intermediaria', 'avancada']
 
     const linhas = await Promise.all(dias.map(async (dia) => {
       const dataDoDia = dataDoDiaNaSemana(dia, dataInput.value)
@@ -2022,7 +2026,10 @@
       const mensagem = document.getElementById('notif-mensagem').value
       const sucessoBox = document.getElementById('notif-sucesso')
 
-      const { data: turmasDoNivel } = await supabase.from('turmas').select('id').eq('nivel', nivel)
+      const filtroTurmas = nivel === 'feminina'
+        ? supabase.from('turmas').select('id').eq('publico', 'feminina')
+        : supabase.from('turmas').select('id').eq('nivel', nivel)
+      const { data: turmasDoNivel } = await filtroTurmas
       const { data: agendamentos } = await supabase.from('agendamentos').select('usuario_id')
         .in('turma_id', turmasDoNivel.map(t => t.id)).eq('status', 'confirmada')
 
