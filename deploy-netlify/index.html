@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Team F.E. — Agendamento de Futevôlei</title>
+<meta name="description" content="Agende suas aulas de futevôlei na praia com o Professor Edu. Turmas Iniciante, Intermediária, Avançada e Feminina, de segunda a sexta. Escolha seu plano e reserve em minutos.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Team F.E. — Agendamento de Futevôlei">
+<meta property="og:description" content="Sua areia, seu horário, seu jogo. Agende suas aulas de futevôlei com o Professor Edu.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1544298621-35883ce5354e?w=1200&h=630&fit=crop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B4F6C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230B4F6C'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23FF6B35'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -319,6 +327,75 @@
     .hero{ padding-bottom:60px; }
     .app-main{ padding:24px 18px 50px; }
   }
+
+  /* ===================== TOASTS ===================== */
+  .toast-container{
+    position:fixed; top:20px; right:20px; z-index:999;
+    display:flex; flex-direction:column; gap:10px; max-width:340px;
+  }
+  .toast{
+    display:flex; align-items:flex-start; gap:10px;
+    background:var(--white); color:var(--graphite); border-radius:var(--radius-sm);
+    padding:14px 16px; box-shadow:var(--shadow); font-size:13.5px; font-weight:600; line-height:1.4;
+    border-left:4px solid var(--ocean-light);
+    animation: toast-in .22s ease;
+  }
+  .toast.success{ border-left-color:var(--aqua-deep); }
+  .toast.error{ border-left-color:var(--energy-deep); }
+  .toast.closing{ animation: toast-out .18s ease forwards; }
+  @keyframes toast-in{ from{ opacity:0; transform:translateX(24px); } to{ opacity:1; transform:translateX(0); } }
+  @keyframes toast-out{ to{ opacity:0; transform:translateX(24px); } }
+
+  /* ===================== SKELETON LOADERS ===================== */
+  .skeleton{
+    background: linear-gradient(90deg, var(--sand) 25%, var(--sand-deep) 37%, var(--sand) 63%);
+    background-size: 400% 100%; animation: skeleton-shimmer 1.4s ease infinite; border-radius:10px;
+  }
+  @keyframes skeleton-shimmer{ 0%{ background-position:100% 50%; } 100%{ background-position:0 50%; } }
+  .skeleton-row{ display:flex; align-items:center; gap:16px; padding:14px 0; border-top:1px solid var(--line); }
+  .skeleton-row:first-child{ border-top:none; padding-top:0; }
+  .skeleton-avatar{ width:56px; height:56px; border-radius:14px; flex-shrink:0; }
+  .skeleton-line{ height:13px; }
+  .skeleton-info{ flex:1; display:flex; flex-direction:column; gap:8px; }
+  .skeleton-info .skeleton-line:first-child{ width:60%; }
+  .skeleton-info .skeleton-line:last-child{ width:35%; }
+  .skeleton-card{ height:120px; border-radius:var(--radius-md); }
+  .skeleton-table-row{ height:44px; border-radius:8px; margin-bottom:8px; }
+
+  /* ===================== DEPOIMENTOS ===================== */
+  .stats-bar{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:44px; }
+  .stats-bar .stat{ background:var(--white); border-radius:var(--radius-md); padding:24px; text-align:center; box-shadow:var(--shadow); }
+  .stats-bar .stat b{ display:block; font-family:var(--font-display); font-size:34px; color:var(--ocean-deep); }
+  .stats-bar .stat span{ font-size:12.5px; color:rgba(30,43,43,.6); font-weight:600; }
+  .depoimentos-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .depo-card{ background:var(--white); border-radius:var(--radius-lg); padding:26px 24px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px; }
+  .depo-stars{ color:var(--energy); font-size:15px; letter-spacing:2px; }
+  .depo-quote{ font-size:14.5px; line-height:1.6; color:rgba(30,43,43,.8); flex:1; }
+  .depo-person{ display:flex; align-items:center; gap:10px; }
+  .depo-avatar{ width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--aqua),var(--ocean)); display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-size:14px; flex-shrink:0; }
+  .depo-person b{ display:block; font-size:13.5px; } .depo-person span{ font-size:12px; color:rgba(30,43,43,.55); }
+
+  /* ===================== WHATSAPP FLOAT ===================== */
+  .whatsapp-float{
+    position:fixed; bottom:26px; right:26px; z-index:150;
+    width:58px; height:58px; border-radius:50%; background:#25D366; color:#fff;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px rgba(37,211,102,0.45);
+    transition: transform .15s ease;
+  }
+  .whatsapp-float:hover{ transform: scale(1.08); }
+
+  /* ===================== SCROLL REVEAL ===================== */
+  .reveal{ opacity:0; transform:translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  @media (max-width:1100px){
+    .stats-bar, .depoimentos-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:680px){
+    .stats-bar, .depoimentos-grid{ grid-template-columns:1fr; }
+    .toast-container{ left:16px; right:16px; max-width:none; }
+    .whatsapp-float{ width:52px; height:52px; bottom:18px; right:18px; }
+  }
 </style>
 </head>
 <body>
@@ -401,12 +478,12 @@
   <div class="arc-divider"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#FFFFFF"/></svg></div>
 
   <section class="section" style="background:#fff;" id="niveis-section">
-    <div class="section-head">
+    <div class="section-head reveal">
       <div class="section-eyebrow">Nivelamento</div>
       <h2 class="section-title">Uma turma para <span>cada momento</span> do seu jogo</h2>
       <p class="section-desc">Do primeiro toque na bola até a competitividade em quadra — encontre a turma certa para evoluir no seu ritmo.</p>
     </div>
-    <div class="levels-grid">
+    <div class="levels-grid reveal">
       <div class="level-card lv-iniciante">
         <span class="level-tag">Nível 1</span>
         <h3>Iniciante</h3>
@@ -431,12 +508,12 @@
   </section>
 
   <section class="section" id="agenda-section">
-    <div class="section-head">
+    <div class="section-head reveal">
       <div class="section-eyebrow">Agenda semanal</div>
       <h2 class="section-title">Todas as aulas com o <span>Prof. Edu</span></h2>
       <p class="section-desc">De segunda a sexta-feira, três turmas por dia — mais a turma feminina às sextas.</p>
     </div>
-    <div class="schedule-strip">
+    <div class="schedule-strip reveal">
       <div class="schedule-strip-top">
         <div class="prof-pill">
           <div class="prof-avatar">E</div>
@@ -473,12 +550,12 @@
   </section>
 
   <section class="section" id="planos-section">
-    <div class="section-head">
+    <div class="section-head reveal">
       <div class="section-eyebrow">Planos</div>
       <h2 class="section-title">Escolha quantas vezes por <span>semana</span> você joga</h2>
       <p class="section-desc">Do compromisso semanal ao passe livre — mude de plano quando quiser.</p>
     </div>
-    <div class="plans-grid">
+    <div class="plans-grid reveal">
       <div class="plan-card">
         <div class="plan-name">Bronze</div>
         <div class="plan-freq">1 aula / semana</div>
@@ -513,7 +590,37 @@
     </div>
   </section>
 
-  <div class="footer-cta">
+  <section class="section" id="depoimentos-section">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Quem já joga com a gente</div>
+      <h2 class="section-title">Alunos que evoluíram <span>na areia</span></h2>
+      <p class="section-desc">Resultado de treino constante, turmas por nível e acompanhamento de perto do Prof. Edu.</p>
+    </div>
+    <div class="stats-bar reveal">
+      <div class="stat"><b>80+</b><span>Alunos ativos</span></div>
+      <div class="stat"><b>6</b><span>Anos de experiência</span></div>
+      <div class="stat"><b>5.000+</b><span>Aulas ministradas</span></div>
+    </div>
+    <div class="depoimentos-grid reveal">
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-quote">"Entrei na turma iniciante sem nunca ter tocado numa bola de futevôlei. Em três meses já estava jogando na intermediária."</p>
+        <div class="depo-person"><div class="depo-avatar">M</div><div><b>Marina Alves</b><span>Turma Intermediária</span></div></div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-quote">"O app de agendamento facilita demais — vejo as vagas, marco a aula e recebo lembrete. Nunca mais perdi horário."</p>
+        <div class="depo-person"><div class="depo-avatar">R</div><div><b>Rafael Souza</b><span>Turma Avançada</span></div></div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-quote">"A turma feminina foi o empurrão que faltava. Ambiente leve, professor atento e muita evolução técnica."</p>
+        <div class="depo-person"><div class="depo-avatar">C</div><div><b>Camila Torres</b><span>Turma Feminina</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-cta reveal">
     <h2>Bora pra areia?</h2>
     <p>Crie sua conta e agende sua primeira aula com o Professor Edu ainda esta semana.</p>
     <button class="btn btn-primary" data-goto="login">Agendar Aula</button>
@@ -523,6 +630,11 @@
     <div class="brand" style="font-size:18px;"><span class="dot"></span>TEAM F.E.</div>
     <div>Segunda a sexta · Prof. Edu · Futevôlei na praia</div>
   </footer>
+
+  <!-- Troque "55SEUNUMERO" pelo número real do Prof. Edu (com DDI+DDD, só dígitos) -->
+  <a class="whatsapp-float" href="https://wa.me/55SEUNUMERO?text=Oi%2C%20quero%20agendar%20uma%20aula%20de%20futev%C3%B4lei!" target="_blank" rel="noopener" title="Falar no WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.1-.43-4.4-1.19l-.32-.19-3.05.8.82-2.97-.2-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.35-5.68c-.24-.12-1.41-.7-1.63-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.19-.71-.63-1.19-1.42-1.33-1.66-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.46-.39-.4-.54-.41-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.41-.58 1.61-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
+  </a>
 </section>
 
 <!-- ================================================================= -->
@@ -613,12 +725,17 @@
 
         <div class="panel">
           <div class="panel-head"><h3>Próximas aulas</h3><button class="btn btn-primary btn-sm" data-tab-goto="agenda">Agendar nova aula</button></div>
-          <div id="dash-proximas-lista"><div class="empty-state">Carregando…</div></div>
+          <div id="dash-proximas-lista">
+            <div class="skeleton-row"><div class="skeleton skeleton-avatar"></div><div class="skeleton-info"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+            <div class="skeleton-row"><div class="skeleton skeleton-avatar"></div><div class="skeleton-info"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+          </div>
         </div>
 
         <div class="panel">
           <div class="panel-head"><h3>Histórico recente</h3><a class="see-all" data-tab-goto="minhas-aulas">Ver tudo</a></div>
-          <div id="dash-historico-lista"><div class="empty-state">Carregando…</div></div>
+          <div id="dash-historico-lista">
+            <div class="skeleton-row"><div class="skeleton skeleton-avatar"></div><div class="skeleton-info"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+          </div>
         </div>
       </div>
 
@@ -628,7 +745,11 @@
           <div><h1>Agenda semanal</h1><div class="sub">Todas as aulas são com o Professor Edu, de segunda a sexta.</div></div>
         </div>
         <div class="agenda-week" id="agenda-week-aluno">
-          <div class="agenda-day-col"><h3>Carregando…</h3></div>
+          <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
+          <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
+          <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
+          <div class="agenda-day-col"><div class="skeleton skeleton-card" style="margin-bottom:14px;"></div><div class="skeleton skeleton-card"></div></div>
+          <div class="agenda-day-col"><div class="skeleton skeleton-card"></div></div>
         </div>
       </div>
 
@@ -662,7 +783,9 @@
             <table>
               <thead><tr><th>Data</th><th>Turma</th><th>Horário</th><th>Status</th></tr></thead>
               <tbody id="tbody-minhas-aulas">
-                <tr><td colspan="4" style="color:rgba(30,43,43,.5);">Carregando…</td></tr>
+                <tr><td colspan="4" style="padding:6px 12px;"><div class="skeleton skeleton-table-row"></div></td></tr>
+                <tr><td colspan="4" style="padding:6px 12px;"><div class="skeleton skeleton-table-row"></div></td></tr>
+                <tr><td colspan="4" style="padding:6px 12px;"><div class="skeleton skeleton-table-row"></div></td></tr>
               </tbody>
             </table>
           </div>
@@ -673,7 +796,8 @@
       <div id="tab-notificacoes" class="app-tab">
         <div class="app-topbar"><div><h1>Notificações</h1><div class="sub">Fique de olho nos avisos sobre suas aulas e plano.</div></div></div>
         <div class="panel" id="notificacoes-lista-aluno">
-          <div class="empty-state">Carregando…</div>
+          <div class="skeleton-row"><div class="skeleton skeleton-avatar" style="border-radius:50%;width:38px;height:38px;"></div><div class="skeleton-info"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-avatar" style="border-radius:50%;width:38px;height:38px;"></div><div class="skeleton-info"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div></div></div>
         </div>
       </div>
 
@@ -782,7 +906,9 @@
           <button class="btn btn-primary btn-sm" id="btn-cadastrar-aluno">Cadastrar aluno</button>
         </div>
         <div class="panel">
-          <div class="panel-head"><h3>Todos os alunos</h3></div>
+          <div class="panel-head"><h3>Todos os alunos</h3>
+            <input type="text" id="busca-alunos" placeholder="Buscar por nome ou nível…" style="padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);font-family:inherit;font-size:13.5px;min-width:220px;">
+          </div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Nome</th><th>Nível</th><th>Plano</th><th>Ações</th></tr></thead>
@@ -849,6 +975,7 @@
             </table>
           </div>
           <button class="btn btn-primary btn-sm" style="margin-top:16px;" id="btn-salvar-presenca">Salvar presença</button>
+          <button class="btn btn-outline btn-sm" style="margin-top:16px;" id="btn-exportar-presenca">Exportar CSV</button>
         </div>
       </div>
 
@@ -856,7 +983,20 @@
   </div>
 </section>
 
+<div class="toast-container" id="toast-container"></div>
 <script>
+  function showToast(mensagem, tipo = 'info'){
+    const container = document.getElementById('toast-container')
+    const toast = document.createElement('div')
+    toast.className = `toast ${tipo}`
+    toast.textContent = mensagem
+    container.appendChild(toast)
+    setTimeout(() => {
+      toast.classList.add('closing')
+      setTimeout(() => toast.remove(), 200)
+    }, 4200)
+  }
+
   function goto(name){
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
@@ -896,6 +1036,17 @@
     e.preventDefault(); goto('landing');
     setTimeout(() => document.getElementById('planos-section').scrollIntoView({behavior:'smooth'}), 50);
   }));
+
+  // scroll-reveal das seções da landing
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view')
+        revealObserver.unobserve(entry.target)
+      }
+    })
+  }, { threshold: 0.15 })
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
 </script>
 
 <!-- ===================================================================
@@ -1142,6 +1293,13 @@
       .eq('usuario_id', user.id)
       .eq('status', 'confirmada')
 
+    // fila_espera é opcional: só existe depois que a migration supabase-schema-fila-espera.sql for rodada
+    const { data: minhaFilaRaw } = await supabase
+      .from('fila_espera')
+      .select('id, turma_id, data')
+      .eq('usuario_id', user.id)
+    const minhaFila = minhaFilaRaw ?? []
+
     const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta']
 
     const colunas = await Promise.all(dias.map(async (dia) => {
@@ -1165,9 +1323,15 @@
           meta = 'Prof. Edu · <b>Agendada</b>'
           botao = `<button class="btn btn-ghost btn-sm btn-block" data-cancelar-agendamento="${meuAgendamento.id}">Cancelar</button>`
         } else if (vagasLivres <= 0) {
-          meta = 'Prof. Edu · <b>0 vagas</b>'
+          const naFila = minhaFila.find(f => f.turma_id === turma.id && f.data === dataDoDia)
           metaClasse = 'slot-meta low'
-          botao = `<button class="btn btn-ghost btn-sm btn-block" disabled>Lotada</button>`
+          if (naFila) {
+            meta = 'Prof. Edu · <b>Na fila de espera</b>'
+            botao = `<button class="btn btn-ghost btn-sm btn-block" data-sair-fila="${naFila.id}">Sair da fila</button>`
+          } else {
+            meta = 'Prof. Edu · <b>0 vagas</b>'
+            botao = `<button class="btn btn-outline btn-sm btn-block" data-entrar-fila-turma="${turma.id}" data-entrar-fila-data="${dataDoDia}">Entrar na fila de espera</button>`
+          }
         } else {
           meta = `Prof. Edu · <b>${vagasLivres} ${vagasLivres === 1 ? 'vaga' : 'vagas'}</b> livre${vagasLivres === 1 ? '' : 's'}`
           if (vagasLivres <= 2) metaClasse = 'slot-meta low'
@@ -1192,13 +1356,29 @@
         p_turma_id: Number(btn.dataset.agendarTurma),
         p_data: btn.dataset.agendarData
       })
-      if (error) { alert(error.message); return }
+      if (error) { showToast(error.message, 'error'); return }
       carregarAgendaAluno()
     }))
 
     container.querySelectorAll('[data-cancelar-agendamento]').forEach(btn => btn.addEventListener('click', async () => {
       const { error } = await supabase.rpc('cancelar_aula', { p_agendamento_id: btn.dataset.cancelarAgendamento })
-      if (error) { alert(error.message); return }
+      if (error) { showToast(error.message, 'error'); return }
+      carregarAgendaAluno()
+    }))
+
+    container.querySelectorAll('[data-entrar-fila-turma]').forEach(btn => btn.addEventListener('click', async () => {
+      const { error } = await supabase.rpc('entrar_fila_espera', {
+        p_turma_id: Number(btn.dataset.entrarFilaTurma),
+        p_data: btn.dataset.entrarFilaData
+      })
+      if (error) { showToast(error.message, 'error'); return }
+      showToast('Você entrou na fila de espera. Avisamos se abrir vaga.', 'success')
+      carregarAgendaAluno()
+    }))
+
+    container.querySelectorAll('[data-sair-fila]').forEach(btn => btn.addEventListener('click', async () => {
+      const { error } = await supabase.from('fila_espera').delete().eq('id', btn.dataset.sairFila)
+      if (error) { showToast(error.message, 'error'); return }
       carregarAgendaAluno()
     }))
   }
@@ -1458,7 +1638,7 @@
         })
         .eq('id', user.id)
 
-      if (error) { alert(error.message); return }
+      if (error) { showToast(error.message, 'error'); return }
 
       sucessoBox.textContent = 'Perfil atualizado com sucesso.'
       sucessoBox.style.display = 'block'
@@ -1528,7 +1708,7 @@
         await supabase.from('assinaturas').update({ ativo: false }).eq('id', assinatura.id)
       }
       const { error } = await supabase.from('assinaturas').insert({ usuario_id: user.id, plano_id: novoPlanoId, ativo: true })
-      if (error) { alert(error.message); return }
+      if (error) { showToast(error.message, 'error'); return }
       carregarPlanosAluno()
     }))
   }
@@ -1698,7 +1878,7 @@
       const { data: assinatura } = await supabase.from('assinaturas').select('plano_id, planos(nome)').eq('usuario_id', aluno.id).eq('ativo', true).single()
       const opcoesNivel = NIVEIS.map(n => `<option value="${n}" ${n === aluno.nivel ? 'selected' : ''}>${NIVEL_LABEL[n]}</option>`).join('')
       const opcoesPlano = '<option value="">Nenhum plano</option>' + todosPlanos.map(p => `<option value="${p.id}" ${p.id === assinatura?.plano_id ? 'selected' : ''}>${p.nome}</option>`).join('')
-      return `<tr>
+      return `<tr data-busca-nome="${aluno.nome.toLowerCase()}" data-busca-nivel="${(aluno.nivel ?? '').toLowerCase()}">
         <td>${aluno.nome}</td>
         <td><select data-usuario-nivel="${aluno.id}" style="padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);">${opcoesNivel}</select></td>
         <td><select data-usuario-plano="${aluno.id}" style="padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);">${opcoesPlano}</select></td>
@@ -1710,11 +1890,23 @@
     }))
     tbody.innerHTML = linhas.length ? linhas.join('') : `<tr><td colspan="4" style="color:rgba(30,43,43,.5);">Nenhum aluno cadastrado ainda.</td></tr>`
 
+    const buscaInput = document.getElementById('busca-alunos')
+    if (buscaInput) {
+      buscaInput.value = ''
+      buscaInput.oninput = () => {
+        const termo = buscaInput.value.trim().toLowerCase()
+        tbody.querySelectorAll('tr[data-busca-nome]').forEach(row => {
+          const combina = row.dataset.buscaNome.includes(termo) || row.dataset.buscaNivel.includes(termo)
+          row.style.display = combina ? '' : 'none'
+        })
+      }
+    }
+
     tbody.querySelectorAll('[data-salvar-nivel]').forEach(btn => btn.addEventListener('click', async () => {
       const usuarioId = btn.dataset.salvarNivel
       const select = tbody.querySelector(`[data-usuario-nivel="${usuarioId}"]`)
       const { error } = await supabase.from('profiles').update({ nivel: select.value }).eq('id', usuarioId)
-      if (error) { alert(error.message); return }
+      if (error) { showToast(error.message, 'error'); return }
       carregarTodosAlunos()
     }))
 
@@ -1724,11 +1916,11 @@
       const novoPlanoId = select.value
 
       const { error: erroDesativar } = await supabase.from('assinaturas').update({ ativo: false }).eq('usuario_id', usuarioId).eq('ativo', true)
-      if (erroDesativar) { alert(erroDesativar.message); return }
+      if (erroDesativar) { showToast(erroDesativar.message, 'error'); return }
 
       if (novoPlanoId) {
         const { error: erroInserir } = await supabase.from('assinaturas').insert({ usuario_id: usuarioId, plano_id: novoPlanoId, ativo: true })
-        if (erroInserir) { alert(erroInserir.message); return }
+        if (erroInserir) { showToast(erroInserir.message, 'error'); return }
         await supabase.from('notificacoes').insert({ usuario_id: usuarioId, tipo: 'nova_turma', mensagem: 'Seu plano foi atualizado pelo professor.' })
       }
 
@@ -1808,11 +2000,11 @@
       const novoPlanoId = select.value
 
       const { error: erroDesativar } = await supabase.from('assinaturas').update({ ativo: false }).eq('usuario_id', usuarioId).eq('ativo', true)
-      if (erroDesativar) { alert(erroDesativar.message); return }
+      if (erroDesativar) { showToast(erroDesativar.message, 'error'); return }
 
       if (novoPlanoId) {
         const { error: erroInserir } = await supabase.from('assinaturas').insert({ usuario_id: usuarioId, plano_id: novoPlanoId, ativo: true })
-        if (erroInserir) { alert(erroInserir.message); return }
+        if (erroInserir) { showToast(erroInserir.message, 'error'); return }
         await supabase.from('notificacoes').insert({ usuario_id: usuarioId, tipo: 'nova_turma', mensagem: 'Seu plano foi atualizado pelo professor.' })
       }
 
@@ -1868,11 +2060,37 @@
     }
 
     tbody.innerHTML = lista.map(item => `
-      <tr><td>${item.profiles?.nome ?? '—'}</td>
+      <tr data-nome-aluno="${item.profiles?.nome ?? '—'}"><td>${item.profiles?.nome ?? '—'}</td>
         <td><label style="display:flex;gap:8px;align-items:center;">
           <input type="checkbox" data-agendamento="${item.id}" ${item.presencas?.[0]?.presente ? 'checked' : ''}> Presente
         </label></td>
       </tr>`).join('')
+  }
+
+  const btnExportarPresenca = document.getElementById('btn-exportar-presenca')
+  if (btnExportarPresenca) {
+    btnExportarPresenca.addEventListener('click', () => {
+      const tbody = document.getElementById('tbody-presenca')
+      const linhas = Array.from(tbody.querySelectorAll('tr[data-nome-aluno]'))
+      if (!linhas.length) { showToast('Nenhum aluno para exportar.', 'error'); return }
+
+      const dataSelecionada = document.getElementById('admin-select-data')?.value ?? ''
+      const csv = ['Aluno,Presente,Data']
+        .concat(linhas.map(row => {
+          const nome = row.dataset.nomeAluno.replace(/"/g, '""')
+          const presente = row.querySelector('[data-agendamento]')?.checked ? 'Sim' : 'Não'
+          return `"${nome}",${presente},${dataSelecionada}`
+        }))
+        .join('\n')
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `presenca-${dataSelecionada || 'turma'}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+    })
   }
 
   const btnSalvarPresenca = document.getElementById('btn-salvar-presenca')
