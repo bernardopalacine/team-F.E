@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team F.E. — Agendamento de Futevôlei</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand: #F1E5C8;
+    --sand-deep: #E3D0A3;
+    --ocean: #0B4F6C;
+    --ocean-deep: #073A50;
+    --ocean-light: #1C7293;
+    --aqua: #2EC4B6;
+    --aqua-deep: #21A99C;
+    --graphite: #1E2B2B;
+    --energy: #FF6B35;
+    --energy-deep: #E85A2A;
+    --white: #FFFFFF;
+    --line: rgba(30,43,43,0.12);
+    --shadow: 0 12px 30px rgba(7,58,80,0.14);
+    --radius-lg: 28px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+    --font-display: 'Anton', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{ background: var(--sand); color: var(--graphite); font-family: var(--font-body); scroll-behavior:smooth; }
+  img,svg{display:block;}
+  button{font-family:inherit; cursor:pointer; border:none;}
+  a{color:inherit; text-decoration:none;}
+  ::selection{ background: var(--energy); color:var(--white); }
+
+  /* ---------- Prototype switcher (demo-only chrome, not part of the product) ---------- */
+  .proto-bar{
+    position:sticky; top:0; z-index:200;
+    background: var(--graphite); color: var(--sand);
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+    padding:10px 20px; font-size:12.5px; font-family: var(--font-mono);
+    letter-spacing:.03em;
+  }
+  .proto-bar span.lbl{ opacity:.55; margin-right:6px; text-transform:uppercase; font-size:11px;}
+  .proto-bar button{
+    background:transparent; color: var(--sand); border:1px solid rgba(241,229,200,0.28);
+    padding:6px 12px; border-radius:999px; font-size:12px; font-family: var(--font-mono);
+    transition: all .15s ease;
+  }
+  .proto-bar button:hover{ border-color: var(--aqua); color:var(--aqua); }
+  .proto-bar button.active{ background: var(--aqua); color: var(--ocean-deep); border-color:var(--aqua); font-weight:700;}
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* ---------- Wave / sand-line divider — the recurring signature motif ---------- */
+  .arc-divider{ width:100%; display:block; line-height:0; }
+  .arc-divider svg{ width:100%; height:auto; display:block; }
+
+  /* ===================== LANDING ===================== */
+  .landing-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 26px 6%; position:relative; z-index:10;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-size:26px; letter-spacing:.02em; color:var(--ocean-deep);}
+  .brand .dot{ width:10px; height:10px; border-radius:50%; background:var(--energy); }
+  .nav-links{ display:flex; gap:30px; font-weight:600; font-size:14.5px; color:var(--ocean-deep); }
+  .nav-links a{ opacity:.75; transition:opacity .15s; }
+  .nav-links a:hover{ opacity:1; }
+  .header-cta{ display:flex; gap:10px; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding: 13px 26px; border-radius: 999px; font-weight:700; font-size:14.5px;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn:active{ transform: scale(.97); }
+  .btn-primary{ background: var(--energy); color:var(--white); box-shadow: 0 8px 20px rgba(255,107,53,0.35);}
+  .btn-primary:hover{ background:var(--energy-deep); }
+  .btn-outline{ background:transparent; color:var(--ocean-deep); border:1.5px solid var(--ocean-deep); }
+  .btn-outline:hover{ background:var(--ocean-deep); color:var(--white); }
+  .btn-ghost{ background: rgba(11,79,108,0.08); color:var(--ocean-deep); }
+  .btn-ghost:hover{ background: rgba(11,79,108,0.16); }
+  .btn-dark{ background:var(--ocean-deep); color:var(--white); }
+  .btn-dark:hover{ background:var(--ocean); }
+  .btn-sm{ padding:9px 18px; font-size:13px; }
+  .btn-block{ width:100%; }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+  .hero{
+    position:relative; padding: 40px 6% 90px; overflow:hidden;
+    background: radial-gradient(120% 100% at 85% 0%, rgba(46,196,182,0.16), transparent 60%);
+  }
+  .hero-grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap:50px; align-items:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12.5px;
+    color:var(--ocean-deep); background: rgba(255,255,255,0.6); border:1px solid var(--sand-deep);
+    padding:7px 14px; border-radius:999px; margin-bottom:22px; letter-spacing:.04em;
+  }
+  .eyebrow .ball{ width:8px; height:8px; border-radius:50%; background:var(--energy);}
+  h1.hero-title{
+    font-family: var(--font-display); font-size: clamp(40px, 5.4vw, 72px); line-height:0.98;
+    color: var(--ocean-deep); letter-spacing:.01em; margin-bottom:22px;
+  }
+  h1.hero-title em{ font-style:normal; color:var(--energy); }
+  .hero-sub{ font-size:18px; line-height:1.6; color:rgba(30,43,43,0.75); max-width:480px; margin-bottom:34px; }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
+  .hero-stats{ display:flex; gap:34px; flex-wrap:wrap; }
+  .hero-stat b{ display:block; font-family:var(--font-display); font-size:28px; color:var(--ocean-deep); }
+  .hero-stat span{ font-size:12.5px; color:rgba(30,43,43,0.6); font-weight:600; }
+
+  .hero-visual{ position:relative; }
+  .court-card{
+    background: linear-gradient(160deg, var(--ocean-deep), var(--ocean-light));
+    border-radius: var(--radius-lg); padding:34px; color:var(--white); position:relative;
+    box-shadow: var(--shadow); overflow:hidden;
+  }
+  .court-card::after{
+    content:''; position:absolute; inset:0; background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 2px, transparent 2px 34px);
+    pointer-events:none;
+  }
+  .court-net{ position:relative; height:150px; margin: 18px 0 26px; }
+  .net-line{ position:absolute; left:0; right:0; top:50%; height:2px; background: rgba(255,255,255,0.5); }
+  .net-post{ position:absolute; top:8%; bottom:50%; width:3px; background: rgba(255,255,255,0.5); }
+  .net-post.left{ left:6%; } .net-post.right{ right:6%; }
+  .ball-arc-svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .court-caption{ position:relative; display:flex; justify-content:space-between; align-items:flex-end; }
+  .court-caption .lvl{ font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.7; }
+  .court-caption .who{ font-family:var(--font-display); font-size:22px; }
+  .float-chip{
+    position:absolute; background:var(--white); color:var(--ocean-deep); border-radius:16px;
+    padding:12px 16px; box-shadow: var(--shadow); font-size:13px; font-weight:700; display:flex; gap:10px; align-items:center;
+  }
+  .float-chip.c1{ top:-18px; right:-14px; }
+  .float-chip.c2{ bottom:-16px; left:-18px; }
+  .float-chip .ic{ width:30px; height:30px; border-radius:50%; background: var(--aqua); display:flex; align-items:center; justify-content:center; color:var(--white); flex-shrink:0; }
+  .float-chip.c1 .ic{ background: var(--energy); }
+
+  .section{ padding: 70px 6%; }
+  .section-head{ max-width:640px; margin-bottom:44px; }
+  .section-eyebrow{ font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--aqua-deep); font-weight:700; margin-bottom:10px; }
+  .section-title{ font-family:var(--font-display); font-size: clamp(28px,3.4vw,42px); color:var(--ocean-deep); line-height:1.05; }
+  .section-title span{ color:var(--energy); }
+  .section-desc{ margin-top:14px; font-size:16px; color:rgba(30,43,43,0.7); line-height:1.6; }
+
+  .schedule-strip{ background: var(--white); border-radius: var(--radius-lg); padding:36px; box-shadow:var(--shadow); }
+  .schedule-strip-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
+  .prof-pill{ display:flex; align-items:center; gap:10px; background: var(--sand); padding:8px 14px 8px 8px; border-radius:999px; }
+  .prof-avatar{ width:34px; height:34px; border-radius:50%; background: linear-gradient(135deg,var(--energy),var(--ocean)); display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-size:14px;}
+  .prof-pill .txt b{ display:block; font-size:13px; } .prof-pill .txt span{ font-size:11.5px; color:rgba(30,43,43,.6); }
+  .week-mini{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .day-mini{ background: var(--sand); border-radius: var(--radius-md); padding:16px 14px; }
+  .day-mini h4{ font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--ocean-deep); margin-bottom:12px; display:flex; justify-content:space-between; }
+  .mini-slot{ font-size:12.5px; padding:8px 0; border-top:1px dashed var(--sand-deep); color:rgba(30,43,43,.75); }
+  .mini-slot:first-of-type{ border-top:none; }
+  .mini-slot b{ display:block; color:var(--graphite); font-size:12.5px; }
+
+  .levels-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:20px; }
+  .level-card{ background: var(--white); border-radius: var(--radius-lg); padding:28px 24px; box-shadow:var(--shadow); border-top:6px solid var(--aqua); transition: transform .18s ease; }
+  .level-card:hover{ transform: translateY(-5px); }
+  .level-card.lv-iniciante{ border-top-color: var(--aqua); }
+  .level-card.lv-intermediaria{ border-top-color: var(--ocean-light); }
+  .level-card.lv-avancada{ border-top-color: var(--energy); }
+  .level-card.lv-feminina{ border-top-color: #C8577D; }
+  .level-tag{ display:inline-block; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; padding:4px 10px; border-radius:999px; background:var(--sand); margin-bottom:14px; }
+  .level-card h3{ font-family:var(--font-display); font-size:22px; color:var(--ocean-deep); margin-bottom:10px; }
+  .level-card p{ font-size:14px; line-height:1.55; color:rgba(30,43,43,.72); }
+
+  .plans-grid{ display:grid; grid-template-columns: repeat(5,1fr); gap:18px; }
+  .plan-card{ background:var(--white); border-radius:var(--radius-lg); padding:26px 22px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:16px; position:relative; border:2px solid transparent; }
+  .plan-card.featured{ border-color: var(--energy); }
+  .plan-badge{ position:absolute; top:-12px; right:20px; background:var(--energy); color:#fff; font-size:11px; font-weight:800; padding:5px 12px; border-radius:999px; font-family:var(--font-mono); }
+  .plan-name{ font-family:var(--font-display); font-size:21px; color:var(--ocean-deep); }
+  .plan-freq{ font-family:var(--font-mono); font-size:13px; color:var(--aqua-deep); font-weight:700; }
+  .plan-list{ list-style:none; font-size:13.5px; color:rgba(30,43,43,.75); display:flex; flex-direction:column; gap:8px; flex:1; }
+  .plan-list li{ display:flex; gap:8px; align-items:flex-start; }
+  .plan-list li::before{ content:'✓'; color:var(--aqua-deep); font-weight:800; }
+
+  .footer-cta{ background: var(--ocean-deep); border-radius: var(--radius-lg); margin:0 6% 70px; padding:56px 40px; text-align:center; position:relative; overflow:hidden; }
+  .footer-cta h2{ font-family:var(--font-display); font-size: clamp(28px,4vw,44px); color:var(--white); margin-bottom:16px; }
+  .footer-cta p{ color:rgba(255,255,255,0.65); margin-bottom:28px; }
+  .site-footer{ padding: 30px 6% 50px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; color:rgba(30,43,43,.55); font-size:13px; }
+
+  /* ===================== LOGIN ===================== */
+  .auth-wrap{ min-height:100vh; display:grid; grid-template-columns: 1fr 1fr; }
+  .auth-side{
+    background: linear-gradient(165deg, var(--ocean-deep), var(--ocean) 60%, var(--aqua-deep));
+    color:#fff; padding: 60px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;
+  }
+  .auth-side .brand{ color:#fff; }
+  .auth-quote{ font-family:var(--font-display); font-size: clamp(26px,2.6vw,38px); line-height:1.15; max-width:420px; position:relative; z-index:2;}
+  .auth-quote span{ color: var(--energy); }
+  .auth-side-foot{ font-size:13px; opacity:.65; position:relative; z-index:2; }
+  .auth-form-wrap{ display:flex; align-items:center; justify-content:center; padding:40px; }
+  .auth-form{ width:100%; max-width:380px; }
+  .auth-form h2{ font-family:var(--font-display); font-size:32px; color:var(--ocean-deep); margin-bottom:8px; }
+  .auth-form > p{ font-size:14px; color:rgba(30,43,43,.6); margin-bottom:32px; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:12.5px; font-weight:700; margin-bottom:7px; color:var(--graphite); }
+  .field input{
+    width:100%; padding:13px 15px; border-radius: var(--radius-sm); border:1.5px solid var(--line);
+    background: rgba(255,255,255,0.6); font-size:14.5px; font-family:inherit; transition: border-color .15s ease;
+  }
+  .field input:focus{ outline:none; border-color: var(--aqua-deep); }
+  .field-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; font-size:13px; }
+  .field-row a{ color:var(--ocean-light); font-weight:700; }
+  .auth-switch{ text-align:center; margin-top:22px; font-size:14px; color:rgba(30,43,43,.65); }
+  .auth-switch a{ color:var(--energy); font-weight:800; }
+
+  /* ===================== APP SHELL (Dashboard etc.) ===================== */
+  .app-shell{ display:grid; grid-template-columns: 260px 1fr; min-height:100vh; }
+  .sidebar{ background: var(--ocean-deep); color:#fff; padding: 28px 20px; display:flex; flex-direction:column; }
+  .sidebar .brand{ color:#fff; margin-bottom: 36px; padding-left:6px; }
+  .side-nav{ display:flex; flex-direction:column; gap:4px; flex:1; }
+  .side-link{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; font-size:14.5px; font-weight:600; color:rgba(255,255,255,0.68); transition: all .15s ease; }
+  .side-link .ic{ width:20px; height:20px; flex-shrink:0; }
+  .side-link:hover{ background: rgba(255,255,255,0.06); color:#fff; }
+  .side-link.active{ background: var(--aqua); color: var(--ocean-deep); font-weight:800; }
+  .side-user{ display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background: rgba(255,255,255,0.06); margin-top:14px; }
+  .side-user .av{ width:38px; height:38px; border-radius:50%; background: var(--energy); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); }
+  .side-user b{ font-size:13.5px; display:block; } .side-user span{ font-size:11.5px; opacity:.6; }
+
+  .app-main{ padding: 34px 44px 60px; }
+  .app-topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; flex-wrap:wrap; gap:14px; }
+  .app-topbar h1{ font-family:var(--font-display); font-size:30px; color:var(--ocean-deep); }
+  .app-topbar .sub{ font-size:14px; color:rgba(30,43,43,.6); margin-top:4px; }
+  .bell-btn{ position:relative; width:44px; height:44px; border-radius:50%; background:var(--white); display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow); }
+  .bell-dot{ position:absolute; top:10px; right:11px; width:8px; height:8px; border-radius:50%; background: var(--energy); border:2px solid var(--white); }
+
+  .app-tab{ display:none; }
+  .app-tab.active{ display:block; }
+
+  .cards-row{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; margin-bottom:30px; }
+  .stat-card{ background: var(--white); border-radius: var(--radius-md); padding:22px; box-shadow: var(--shadow); }
+  .stat-card .ic{ width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .stat-card b{ display:block; font-family:var(--font-display); font-size:26px; color:var(--ocean-deep); }
+  .stat-card span{ font-size:12.5px; color:rgba(30,43,43,.6); font-weight:600; }
+
+  .panel{ background: var(--white); border-radius: var(--radius-lg); padding:28px; box-shadow: var(--shadow); margin-bottom:26px; }
+  .panel-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+  .panel-head h3{ font-family:var(--font-display); font-size:19px; color:var(--ocean-deep); }
+  .panel-head a.see-all{ font-size:13px; font-weight:700; color:var(--aqua-deep); }
+
+  .lesson-row{ display:flex; align-items:center; gap:16px; padding:14px 0; border-top:1px solid var(--line); }
+  .lesson-row:first-child{ border-top:none; padding-top:0; }
+  .lesson-date{ width:56px; height:56px; border-radius:14px; background:var(--sand); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; }
+  .lesson-date b{ font-family:var(--font-display); font-size:19px; color:var(--ocean-deep); line-height:1; }
+  .lesson-date span{ font-size:10px; text-transform:uppercase; font-family:var(--font-mono); color:rgba(30,43,43,.55); }
+  .lesson-info{ flex:1; } .lesson-info b{ font-size:14.5px; display:block; } .lesson-info span{ font-size:12.5px; color:rgba(30,43,43,.6); }
+  .status-chip{ font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:999px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.03em; }
+  .status-chip.confirmada{ background: rgba(46,196,182,0.16); color: var(--aqua-deep); }
+  .status-chip.concluida{ background: rgba(11,79,108,0.1); color: var(--ocean-deep); }
+  .status-chip.cancelada{ background: rgba(255,107,53,0.14); color: var(--energy-deep); }
+
+  .notif-row{ display:flex; gap:14px; padding:16px 0; border-top:1px solid var(--line); }
+  .notif-row:first-child{ border-top:none; padding-top:0; }
+  .notif-ic{ width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .notif-info b{ font-size:14px; display:block; margin-bottom:2px;} .notif-info span{ font-size:12.5px; color:rgba(30,43,43,.6); }
+  .notif-time{ margin-left:auto; font-size:11.5px; color:rgba(30,43,43,.45); font-family:var(--font-mono); white-space:nowrap; }
+
+  /* Agenda tab */
+  .agenda-week{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+  .agenda-day-col h3{ font-family:var(--font-mono); font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--ocean-deep); margin-bottom:14px; text-align:center; background:var(--sand); padding:10px; border-radius:12px;}
+  .slot-card{ background:var(--white); border-radius: var(--radius-md); padding:16px; box-shadow: var(--shadow); margin-bottom:14px; border-left:5px solid var(--aqua); }
+  .slot-card.lv-avancada{ border-left-color: var(--energy); }
+  .slot-card.lv-intermediaria{ border-left-color: var(--ocean-light); }
+  .slot-card.lv-feminina{ border-left-color:#C8577D; }
+  .slot-time{ font-family:var(--font-mono); font-weight:700; font-size:14px; color:var(--ocean-deep); margin-bottom:6px; }
+  .slot-level{ font-size:13.5px; font-weight:800; margin-bottom:4px; }
+  .slot-meta{ font-size:12px; color:rgba(30,43,43,.6); margin-bottom:12px; }
+  .slot-meta b{ color:var(--aqua-deep); }
+  .slot-meta.low b{ color: var(--energy-deep); }
+
+  /* Plans tab in-app */
+  .current-plan-banner{ background: linear-gradient(120deg, var(--ocean-deep), var(--ocean-light)); border-radius: var(--radius-lg); padding:26px 30px; color:#fff; display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; flex-wrap:wrap; gap:16px;}
+  .current-plan-banner .l span{ font-family:var(--font-mono); font-size:12px; opacity:.7; text-transform:uppercase; letter-spacing:.05em; }
+  .current-plan-banner .l h2{ font-family:var(--font-display); font-size:26px; margin-top:4px; }
+  .progress-bar{ width:220px; height:8px; border-radius:999px; background:rgba(255,255,255,0.2); overflow:hidden; margin-top:8px; }
+  .progress-bar i{ display:block; height:100%; width:66%; background:var(--energy); border-radius:999px; }
+
+  .table-wrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse: collapse; font-size:14px; }
+  th{ text-align:left; font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:rgba(30,43,43,.55); padding:10px 12px; border-bottom:2px solid var(--line); }
+  td{ padding:13px 12px; border-bottom:1px solid var(--line); }
+  tr:last-child td{ border-bottom:none; }
+  .pill{ font-size:11.5px; font-weight:800; padding:5px 11px; border-radius:999px; font-family:var(--font-mono); }
+  .pill.ok{ background: rgba(46,196,182,0.16); color:var(--aqua-deep); }
+  .pill.warn{ background: rgba(255,107,53,0.14); color:var(--energy-deep); }
+  .pill.info{ background: rgba(11,79,108,0.1); color:var(--ocean-deep); }
+  .icon-btn{ width:32px; height:32px; border-radius:9px; background:var(--sand); display:inline-flex; align-items:center; justify-content:center; margin-right:6px; }
+  .icon-btn:hover{ background: var(--sand-deep); }
+
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .empty-state{ text-align:center; padding:50px 20px; color:rgba(30,43,43,.5); }
+  .empty-state .ic{ width:56px; height:56px; margin:0 auto 16px; opacity:.4; }
+
+  @media (max-width:1100px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .levels-grid{ grid-template-columns:repeat(2,1fr); }
+    .plans-grid{ grid-template-columns:repeat(2,1fr); }
+    .week-mini{ grid-template-columns:repeat(3,1fr); }
+    .agenda-week{ grid-template-columns:repeat(2,1fr); }
+    .app-shell{ grid-template-columns:80px 1fr; }
+    .sidebar .brand span.txt, .side-link span.txt, .side-user .txt{ display:none; }
+    .sidebar{ align-items:center; padding:28px 10px; }
+    .side-link{ justify-content:center; }
+    .auth-wrap{ grid-template-columns:1fr; }
+    .auth-side{ display:none; }
+    .cards-row{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:680px){
+    .nav-links{ display:none; }
+    .levels-grid, .plans-grid, .week-mini, .agenda-week, .cards-row, .form-grid{ grid-template-columns:1fr; }
+    .hero{ padding-bottom:60px; }
+    .app-main{ padding:24px 18px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PROTOTYPE SWITCHER (demo chrome only) ================= -->
+<div class="proto-bar">
+  <span class="lbl">Protótipo Team F.E.</span>
+  <button data-screen="landing" class="active">Landing</button>
+  <button data-screen="login">Login</button>
+  <button data-screen="app">Área do Aluno</button>
+  <button data-screen="admin">Área Admin</button>
+</div>
+
+<!-- ================================================================= -->
+<!-- SCREEN 1 — LANDING PAGE                                            -->
+<!-- ================================================================= -->
+<section id="screen-landing" class="screen active">
+
+  <header class="landing-header">
+    <div class="brand"><span class="dot"></span>TEAM F.E.</div>
+    <nav class="nav-links">
+      <a href="#niveis-section">Níveis</a>
+      <a href="#agenda-section">Agenda</a>
+      <a href="#planos-section">Planos</a>
+    </nav>
+    <div class="header-cta">
+      <button class="btn btn-ghost btn-sm" data-goto="login">Entrar</button>
+      <button class="btn btn-primary btn-sm" data-goto="login">Agendar Aula</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="ball"></span> Aulas de segunda a sexta · Prof. Edu</div>
+        <h1 class="hero-title">Sua areia,<br>seu <em>horário</em>,<br>seu jogo.</h1>
+        <p class="hero-sub">Agende suas aulas de futevôlei de forma simples, rápida e organizada. Escolha a turma pelo seu nível e acompanhe tudo em um só lugar.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-goto="login">Agendar Aula</button>
+          <button class="btn btn-outline" data-goto="landing-planos">Ver Planos</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>4</b><span>Níveis de turma</span></div>
+          <div class="hero-stat"><b>5x</b><span>Por semana, seg–sex</span></div>
+          <div class="hero-stat"><b>1</b><span>Professor dedicado</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="float-chip c1"><span class="ic">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span> Vaga confirmada</div>
+        <div class="court-card">
+          <div class="court-caption">
+            <div>
+              <div class="lvl">Quinta-feira · 16:30</div>
+              <div class="who">Turma Avançada</div>
+            </div>
+            <div class="lvl">3 de 8 vagas</div>
+          </div>
+          <div class="court-net">
+            <div class="net-post left"></div><div class="net-post right"></div>
+            <div class="net-line"></div>
+            <svg class="ball-arc-svg" viewBox="0 0 400 150" preserveAspectRatio="none">
+              <path d="M20,120 Q100,10 200,75 Q300,140 380,20" stroke="#FF6B35" stroke-width="3" fill="none" stroke-dasharray="2 10" stroke-linecap="round"/>
+              <circle cx="380" cy="20" r="7" fill="#FF6B35"/>
+            </svg>
+          </div>
+          <div class="court-caption">
+            <div class="lvl">Praia · Areia · Sol</div>
+            <div class="lvl">Prof. Edu</div>
+          </div>
+        </div>
+        <div class="float-chip c2"><span class="ic">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/></svg>
+          </span> Lembrete 1h antes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arc-divider"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#FFFFFF"/></svg></div>
+
+  <section class="section" style="background:#fff;" id="niveis-section">
+    <div class="section-head">
+      <div class="section-eyebrow">Nivelamento</div>
+      <h2 class="section-title">Uma turma para <span>cada momento</span> do seu jogo</h2>
+      <p class="section-desc">Do primeiro toque na bola até a competitividade em quadra — encontre a turma certa para evoluir no seu ritmo.</p>
+    </div>
+    <div class="levels-grid">
+      <div class="level-card lv-iniciante">
+        <span class="level-tag">Nível 1</span>
+        <h3>Iniciante</h3>
+        <p>Para alunos que estão começando no futevôlei. Foco em fundamentos básicos, controle de bola, posicionamento e primeiros movimentos.</p>
+      </div>
+      <div class="level-card lv-intermediaria">
+        <span class="level-tag">Nível 2</span>
+        <h3>Intermediária</h3>
+        <p>Para alunos que já possuem noção dos fundamentos. Foco em evolução técnica, recepção, passe, ataque, defesa e leitura de jogo.</p>
+      </div>
+      <div class="level-card lv-avancada">
+        <span class="level-tag">Nível 3</span>
+        <h3>Avançada</h3>
+        <p>Para alunos com domínio técnico e experiência em jogo. Foco em performance, estratégia, tomada de decisão, intensidade e competitividade.</p>
+      </div>
+      <div class="level-card lv-feminina">
+        <span class="level-tag">Exclusiva</span>
+        <h3>Feminina</h3>
+        <p>Aula exclusiva para mulheres. Foco em evolução técnica, confiança, integração e desenvolvimento no futevôlei.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="agenda-section">
+    <div class="section-head">
+      <div class="section-eyebrow">Agenda semanal</div>
+      <h2 class="section-title">Todas as aulas com o <span>Prof. Edu</span></h2>
+      <p class="section-desc">De segunda a sexta-feira, três turmas por dia — mais a turma feminina às sextas.</p>
+    </div>
+    <div class="schedule-strip">
+      <div class="schedule-strip-top">
+        <div class="prof-pill">
+          <div class="prof-avatar">E</div>
+          <div class="txt"><b>Professor Edu</b><span>Responsável por todas as turmas</span></div>
+        </div>
+        <button class="btn btn-primary btn-sm" data-goto="login">Ver agenda completa</button>
+      </div>
+      <div class="week-mini">
+        <div class="day-mini"><h4>Segunda</h4>
+          <div class="mini-slot"><b>14:30–15:30</b>Iniciante</div>
+          <div class="mini-slot"><b>15:30–16:30</b>Intermediária</div>
+          <div class="mini-slot"><b>16:30–17:30</b>Avançada</div>
+        </div>
+        <div class="day-mini"><h4>Terça</h4>
+          <div class="mini-slot"><b>14:30–15:30</b>Iniciante</div>
+          <div class="mini-slot"><b>15:30–16:30</b>Intermediária</div>
+          <div class="mini-slot"><b>16:30–17:30</b>Avançada</div>
+        </div>
+        <div class="day-mini"><h4>Quarta</h4>
+          <div class="mini-slot"><b>14:30–15:30</b>Iniciante</div>
+          <div class="mini-slot"><b>15:30–16:30</b>Intermediária</div>
+          <div class="mini-slot"><b>16:30–17:30</b>Avançada</div>
+        </div>
+        <div class="day-mini"><h4>Quinta</h4>
+          <div class="mini-slot"><b>14:30–15:30</b>Iniciante</div>
+          <div class="mini-slot"><b>15:30–16:30</b>Intermediária</div>
+          <div class="mini-slot"><b>16:30–17:30</b>Avançada</div>
+        </div>
+        <div class="day-mini"><h4>Sexta</h4>
+          <div class="mini-slot"><b>15:30–16:30</b>Feminina</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="planos-section">
+    <div class="section-head">
+      <div class="section-eyebrow">Planos</div>
+      <h2 class="section-title">Escolha quantas vezes por <span>semana</span> você joga</h2>
+      <p class="section-desc">Do compromisso semanal ao passe livre — mude de plano quando quiser.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Bronze</div>
+        <div class="plan-freq">1 aula / semana</div>
+        <ul class="plan-list"><li>Escolha livre da turma</li><li>Reagendamento simples</li><li>Acesso ao app de agenda</li></ul>
+        <button class="btn btn-outline btn-block btn-sm" data-goto="login">Escolher Plano</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Prata</div>
+        <div class="plan-freq">2 aulas / semana</div>
+        <ul class="plan-list"><li>Tudo do Bronze</li><li>Prioridade em fila de espera</li><li>Histórico de evolução</li></ul>
+        <button class="btn btn-outline btn-block btn-sm" data-goto="login">Escolher Plano</button>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-badge">Mais popular</div>
+        <div class="plan-name">Ouro</div>
+        <div class="plan-freq">3 aulas / semana</div>
+        <ul class="plan-list"><li>Tudo do Prata</li><li>Acesso à turma avançada</li><li>Notificações prioritárias</li></ul>
+        <button class="btn btn-primary btn-block btn-sm" data-goto="login">Escolher Plano</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Premium</div>
+        <div class="plan-freq">4 aulas / semana</div>
+        <ul class="plan-list"><li>Tudo do Ouro</li><li>Reposição facilitada</li><li>Avaliação técnica mensal</li></ul>
+        <button class="btn btn-outline btn-block btn-sm" data-goto="login">Escolher Plano</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Passe Livre</div>
+        <div class="plan-freq">5 aulas / semana</div>
+        <ul class="plan-list"><li>Todas as turmas liberadas</li><li>Sem limite de reagendamento</li><li>Suporte direto com o Edu</li></ul>
+        <button class="btn btn-outline btn-block btn-sm" data-goto="login">Escolher Plano</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-cta">
+    <h2>Bora pra areia?</h2>
+    <p>Crie sua conta e agende sua primeira aula com o Professor Edu ainda esta semana.</p>
+    <button class="btn btn-primary" data-goto="login">Agendar Aula</button>
+  </div>
+
+  <footer class="site-footer">
+    <div class="brand" style="font-size:18px;"><span class="dot"></span>TEAM F.E.</div>
+    <div>Segunda a sexta · Prof. Edu · Futevôlei na praia</div>
+  </footer>
+</section>
+
+<!-- ================================================================= -->
+<!-- SCREEN 2 — LOGIN                                                   -->
+<!-- ================================================================= -->
+<section id="screen-login" class="screen">
+  <div class="auth-wrap">
+    <div class="auth-side">
+      <div class="brand"><span class="dot"></span>TEAM F.E.</div>
+      <div class="auth-quote">"Todo mundo tem seu <span>nível</span>. A areia é a mesma pra todo mundo."<br><br>— Prof. Edu</div>
+      <div class="auth-side-foot">Aulas de segunda a sexta · Turmas Iniciante, Intermediária, Avançada e Feminina</div>
+    </div>
+    <div class="auth-form-wrap">
+      <form class="auth-form" id="login-form">
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre para ver sua agenda e seu plano.</p>
+        <div id="login-erro" style="display:none;background:rgba(255,107,53,0.12);color:#E85A2A;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+        <div class="field"><label>E-mail</label><input type="email" id="login-email" placeholder="voce@email.com" required></div>
+        <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" required></div>
+        <div class="field-row"><label style="display:flex;align-items:center;gap:6px;font-weight:600;"><input type="checkbox" checked style="width:auto;"> Manter conectado</label><a href="#" id="esqueci-senha">Esqueci minha senha</a></div>
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">Entrar</button>
+        <div class="auth-switch">Ainda não tem conta? <a href="#" id="ir-para-cadastro">Criar conta</a></div>
+      </form>
+
+      <form class="auth-form" id="signup-form" style="display:none;">
+        <h2>Criar conta</h2>
+        <p>Cadastre-se para agendar suas aulas com o Prof. Edu.</p>
+        <div id="signup-erro" style="display:none;background:rgba(255,107,53,0.12);color:#E85A2A;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+        <div id="signup-sucesso" style="display:none;background:rgba(46,196,182,0.16);color:#21A99C;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+        <div class="field"><label>Nome completo</label><input type="text" id="signup-nome" placeholder="Seu nome" required></div>
+        <div class="field"><label>E-mail</label><input type="email" id="signup-email" placeholder="voce@email.com" required></div>
+        <div class="field"><label>Senha</label><input type="password" id="signup-senha" placeholder="Mínimo 6 caracteres" minlength="6" required></div>
+        <button type="submit" class="btn btn-primary btn-block" id="signup-btn">Criar conta</button>
+        <div class="auth-switch">Já tem conta? <a href="#" id="ir-para-login">Entrar</a></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- SCREEN 3 — APP (ÁREA DO ALUNO)                                     -->
+<!-- ================================================================= -->
+<section id="screen-app" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="dot"></span><span class="txt">TEAM F.E.</span></div>
+      <nav class="side-nav">
+        <a class="side-link active" data-tab="dashboard"><svg class="ic" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg><span class="txt">Início</span></a>
+        <a class="side-link" data-tab="agenda"><svg class="ic" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="txt">Agenda</span></a>
+        <a class="side-link" data-tab="niveis"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M4 20l6-14 4 8 3-6 3 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="txt">Níveis</span></a>
+        <a class="side-link" data-tab="planos"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 6.5.9-4.7 4.6 1.1 6.5-5.9-3.1-5.9 3.1 1.1-6.5L2.5 8.9 9 8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="txt">Planos</span></a>
+        <a class="side-link" data-tab="minhas-aulas"><svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="txt">Minhas Aulas</span></a>
+        <a class="side-link" data-tab="notificacoes"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 01-3.4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="txt">Notificações</span></a>
+        <a class="side-link" data-tab="perfil"><svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="txt">Perfil</span></a>
+      </nav>
+      <div class="side-user">
+        <div class="av" id="sidebar-avatar">A</div>
+        <div class="txt"><b id="sidebar-nome">Aluno</b><span id="sidebar-plano">—</span></div>
+      </div>
+      <a class="side-link btn-sair" style="margin-top:6px;" data-goto="landing"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="txt">Sair</span></a>
+    </aside>
+
+    <main class="app-main">
+
+      <!-- ---- DASHBOARD ---- -->
+      <div id="tab-dashboard" class="app-tab active">
+        <div class="app-topbar">
+          <div><h1 id="dashboard-saudacao">Olá 🏐</h1><div class="sub" id="dashboard-data-sub">Bora pra areia?</div></div>
+          <button class="bell-btn" data-tab-goto="notificacoes"><span class="bell-dot"></span>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="#0B4F6C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="cards-row">
+          <div class="stat-card"><div class="ic" style="background:rgba(255,107,53,0.14);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 6.5.9-4.7 4.6 1.1 6.5-5.9-3.1-5.9 3.1 1.1-6.5L2.5 8.9 9 8z" stroke="#FF6B35" stroke-width="2" stroke-linejoin="round"/></svg>
+            </div><b id="dash-plano-nome">—</b><span id="dash-plano-sub">Plano atual</span></div>
+          <div class="stat-card"><div class="ic" style="background:rgba(46,196,182,0.16);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#21A99C" stroke-width="2"/><path d="M3 10h18" stroke="#21A99C" stroke-width="2"/></svg>
+            </div><b id="dash-aulas-disponiveis">—</b><span>Aulas disponíveis nesta semana</span></div>
+          <div class="stat-card"><div class="ic" style="background:rgba(11,79,108,0.1);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0B4F6C" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="#0B4F6C" stroke-width="2" stroke-linecap="round"/></svg>
+            </div><b id="dash-proxima-aula">—</b><span>Próxima aula agendada</span></div>
+          <div class="stat-card"><div class="ic" style="background:rgba(200,87,125,0.14);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#C8577D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div><b id="dash-total-realizadas">—</b><span>Aulas realizadas ao todo</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>Próximas aulas</h3><button class="btn btn-primary btn-sm" data-tab-goto="agenda">Agendar nova aula</button></div>
+          <div id="dash-proximas-lista"><div class="empty-state">Carregando…</div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>Histórico recente</h3><a class="see-all" data-tab-goto="minhas-aulas">Ver tudo</a></div>
+          <div id="dash-historico-lista"><div class="empty-state">Carregando…</div></div>
+        </div>
+      </div>
+
+      <!-- ---- AGENDA ---- -->
+      <div id="tab-agenda" class="app-tab">
+        <div class="app-topbar">
+          <div><h1>Agenda semanal</h1><div class="sub">Todas as aulas são com o Professor Edu, de segunda a sexta.</div></div>
+        </div>
+        <div class="agenda-week" id="agenda-week-aluno">
+          <div class="agenda-day-col"><h3>Carregando…</h3></div>
+        </div>
+      </div>
+
+      <!-- ---- NÍVEIS ---- -->
+      <div id="tab-niveis" class="app-tab">
+        <div class="app-topbar"><div><h1>Níveis das turmas</h1><div class="sub">Entenda o foco de cada turma antes de agendar.</div></div></div>
+        <div class="levels-grid">
+          <div class="level-card lv-iniciante"><span class="level-tag">Nível 1</span><h3>Iniciante</h3><p>Para alunos que estão começando no futevôlei. Foco em fundamentos básicos, controle de bola, posicionamento e primeiros movimentos.</p></div>
+          <div class="level-card lv-intermediaria"><span class="level-tag">Nível 2</span><h3>Intermediária</h3><p>Para alunos que já possuem noção dos fundamentos. Foco em evolução técnica, recepção, passe, ataque, defesa e leitura de jogo.</p></div>
+          <div class="level-card lv-avancada"><span class="level-tag">Nível 3</span><h3>Avançada</h3><p>Para alunos com domínio técnico e experiência em jogo. Foco em performance, estratégia, tomada de decisão, intensidade e competitividade.</p></div>
+          <div class="level-card lv-feminina"><span class="level-tag">Exclusiva</span><h3>Feminina</h3><p>Aula exclusiva para mulheres. Foco em evolução técnica, confiança, integração e desenvolvimento no futevôlei.</p></div>
+        </div>
+      </div>
+
+      <!-- ---- PLANOS (in-app) ---- -->
+      <div id="tab-planos" class="app-tab">
+        <div class="app-topbar"><div><h1>Planos</h1><div class="sub">Gerencie sua frequência semanal de aulas.</div></div></div>
+        <div class="current-plan-banner" id="plano-atual-banner">
+          <div class="l"><span>Plano atual</span><h2>Carregando…</h2>
+            <div class="progress-bar"><i style="width:0%"></i></div>
+          </div>
+        </div>
+        <div class="plans-grid" id="planos-grid-aluno"></div>
+      </div>
+
+      <!-- ---- MINHAS AULAS (histórico) ---- -->
+      <div id="tab-minhas-aulas" class="app-tab">
+        <div class="app-topbar"><div><h1>Minhas Aulas</h1><div class="sub">Histórico completo de aulas agendadas e realizadas.</div></div></div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Data</th><th>Turma</th><th>Horário</th><th>Status</th></tr></thead>
+              <tbody id="tbody-minhas-aulas">
+                <tr><td colspan="4" style="color:rgba(30,43,43,.5);">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- NOTIFICAÇÕES ---- -->
+      <div id="tab-notificacoes" class="app-tab">
+        <div class="app-topbar"><div><h1>Notificações</h1><div class="sub">Fique de olho nos avisos sobre suas aulas e plano.</div></div></div>
+        <div class="panel" id="notificacoes-lista-aluno">
+          <div class="empty-state">Carregando…</div>
+        </div>
+      </div>
+
+      <!-- ---- PERFIL ---- -->
+      <div id="tab-perfil" class="app-tab">
+        <div class="app-topbar"><div><h1>Meu perfil</h1><div class="sub">Suas informações de cadastro.</div></div></div>
+        <div class="panel">
+          <div id="perfil-sucesso" style="display:none;background:rgba(46,196,182,0.14);color:#21A99C;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+          <div class="form-grid">
+            <div class="field"><label>Nome completo</label><input type="text" id="perfil-nome"></div>
+            <div class="field"><label>E-mail</label><input type="text" id="perfil-email" disabled></div>
+            <div class="field"><label>Telefone</label><input type="text" id="perfil-telefone"></div>
+            <div class="field"><label>Nível atual</label><input type="text" id="perfil-nivel" disabled></div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btn-salvar-perfil">Salvar alterações</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</section>
+
+<!-- ================================================================= -->
+<!-- SCREEN 4 — ÁREA ADMINISTRATIVA (PROFESSOR)                         -->
+<!-- ================================================================= -->
+<section id="screen-admin" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="dot"></span><span class="txt">TEAM F.E.</span></div>
+      <nav class="side-nav">
+        <a class="side-link active" data-admin-tab="agenda-admin"><svg class="ic" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="txt">Agenda &amp; Vagas</span></a>
+        <a class="side-link" data-admin-tab="alunos-admin"><svg class="ic" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="2"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="8" r="2.5" stroke="currentColor" stroke-width="2"/><path d="M16 14.5c2.8.3 5 2 5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="txt">Alunos</span></a>
+        <a class="side-link" data-admin-tab="planos-admin"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 6.5.9-4.7 4.6 1.1 6.5-5.9-3.1-5.9 3.1 1.1-6.5L2.5 8.9 9 8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="txt">Planos</span></a>
+        <a class="side-link" data-admin-tab="notif-admin"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="txt">Notificações</span></a>
+        <a class="side-link" data-admin-tab="presenca-admin"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="2"/></svg><span class="txt">Lista de Presença</span></a>
+      </nav>
+      <div class="side-user">
+        <div class="av" id="sidebar-admin-avatar">A</div>
+        <div class="txt"><b id="sidebar-admin-nome">Admin</b><span>Administrador</span></div>
+      </div>
+      <a class="side-link btn-sair" style="margin-top:6px;" data-goto="landing"><svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="txt">Sair</span></a>
+    </aside>
+
+    <main class="app-main">
+
+      <!-- ADMIN: AGENDA & VAGAS -->
+      <div id="admintab-agenda-admin" class="app-tab active">
+        <div class="app-topbar">
+          <div><h1>Agenda &amp; controle de vagas</h1><div class="sub">Alunos agendados por dia e horário — edite turmas quando precisar.</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head" style="flex-wrap:wrap;gap:12px;">
+            <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px;flex:1;min-width:280px;">
+              <div class="field" style="margin-bottom:0;"><label>Turma</label>
+                <select id="admin-select-turma" style="width:100%;padding:13px 15px;border-radius:12px;border:1.5px solid var(--line);font-family:inherit;font-size:14.5px;"></select>
+              </div>
+              <div class="field" style="margin-bottom:0;"><label>Data</label>
+                <input type="date" id="admin-select-data">
+              </div>
+            </div>
+            <span class="pill warn" id="admin-vagas-info">—</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Aluno</th><th>Plano</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="tbody-alunos-turma">
+                <tr><td colspan="4" style="color:rgba(30,43,43,.5);">Configure a conexão com o Supabase para carregar os dados reais.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Visão geral da semana</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Dia</th><th>Iniciante</th><th>Intermediária</th><th>Avançada</th><th>Feminina</th></tr></thead>
+              <tbody id="tbody-visao-semana">
+                <tr><td colspan="5" style="color:rgba(30,43,43,.5);">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN: ALUNOS -->
+      <div id="admintab-alunos-admin" class="app-tab">
+        <div class="app-topbar"><div><h1>Alunos</h1><div class="sub">Cadastro e gestão de alunos.</div></div></div>
+        <div class="panel">
+          <div class="panel-head"><h3>Cadastrar novo aluno</h3></div>
+          <div id="cadastro-erro" style="display:none;background:rgba(255,107,53,0.12);color:#E85A2A;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+          <div class="form-grid">
+            <div class="field"><label>Nome completo</label><input type="text" id="cad-nome" placeholder="Nome do aluno"></div>
+            <div class="field"><label>E-mail</label><input type="email" id="cad-email" placeholder="email@exemplo.com"></div>
+            <div class="field"><label>Nível</label>
+              <select id="cad-nivel" style="width:100%;padding:13px 15px;border-radius:12px;border:1.5px solid var(--line);font-family:inherit;font-size:14.5px;">
+                <option value="iniciante">Iniciante</option>
+                <option value="intermediaria">Intermediária</option>
+                <option value="avancada">Avançada</option>
+                <option value="feminina">Feminina</option>
+              </select>
+            </div>
+            <div class="field"><label>Plano</label>
+              <select id="cad-plano" style="width:100%;padding:13px 15px;border-radius:12px;border:1.5px solid var(--line);font-family:inherit;font-size:14.5px;"></select>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btn-cadastrar-aluno">Cadastrar aluno</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Todos os alunos</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>Nível</th><th>Plano</th><th>Ações</th></tr></thead>
+              <tbody id="tbody-todos-alunos">
+                <tr><td colspan="4" style="color:rgba(30,43,43,.5);">Configure a conexão com o Supabase para carregar os dados reais.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN: PLANOS -->
+      <div id="admintab-planos-admin" class="app-tab">
+        <div class="app-topbar"><div><h1>Controle de planos</h1><div class="sub">Veja e altere o plano contratado de cada aluno.</div></div></div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Aluno</th><th>Plano atual</th><th>Aulas usadas / semana</th><th>Novo plano</th><th>Ações</th></tr></thead>
+              <tbody id="tbody-planos-admin">
+                <tr><td colspan="5" style="color:rgba(30,43,43,.5);">Configure a conexão com o Supabase para carregar os dados reais.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN: NOTIFICAÇÕES -->
+      <div id="admintab-notif-admin" class="app-tab">
+        <div class="app-topbar"><div><h1>Enviar notificações</h1><div class="sub">Avise alunos sobre mudanças, cancelamentos e novidades.</div></div></div>
+        <div class="panel">
+          <div id="notif-sucesso" style="display:none;background:rgba(46,196,182,0.14);color:#21A99C;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+          <div class="field"><label>Destinatários (por nível de turma)</label>
+            <select id="notif-nivel" style="width:100%;padding:13px 15px;border-radius:12px;border:1.5px solid var(--line);font-family:inherit;font-size:14.5px;">
+              <option value="iniciante">Todos da Turma Iniciante</option>
+              <option value="intermediaria">Todos da Turma Intermediária</option>
+              <option value="avancada" selected>Todos da Turma Avançada</option>
+              <option value="feminina">Todos da Turma Feminina</option>
+            </select>
+          </div>
+          <div class="field"><label>Tipo de notificação</label>
+            <select id="notif-tipo" style="width:100%;padding:13px 15px;border-radius:12px;border:1.5px solid var(--line);font-family:inherit;font-size:14.5px;">
+              <option value="alteracao_horario">Alteração de horário</option>
+              <option value="cancelamento">Cancelamento de aula</option>
+              <option value="nova_turma">Nova turma disponível</option>
+              <option value="limite_plano">Aviso sobre o plano</option>
+            </select>
+          </div>
+          <div class="field"><label>Mensagem</label><input type="text" id="notif-mensagem" value="A aula de sexta-feira foi antecipada para as 15h."></div>
+          <button class="btn btn-primary btn-sm" id="btn-enviar-notif">Enviar notificação</button>
+        </div>
+      </div>
+
+      <!-- ADMIN: PRESENÇA -->
+      <div id="admintab-presenca-admin" class="app-tab">
+        <div class="app-topbar"><div><h1>Lista de presença</h1><div class="sub">Usa a mesma turma e data selecionadas em "Agenda &amp; Vagas".</div></div></div>
+        <div class="panel">
+          <div id="presenca-sucesso" style="display:none;background:rgba(46,196,182,0.14);color:#21A99C;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;font-weight:600;"></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Aluno</th><th>Presença</th></tr></thead>
+              <tbody id="tbody-presenca">
+                <tr><td colspan="2" style="color:rgba(30,43,43,.5);">Selecione turma e data na aba "Agenda &amp; Vagas".</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-primary btn-sm" style="margin-top:16px;" id="btn-salvar-presenca">Salvar presença</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</section>
+
+<script>
+  function goto(name){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    document.querySelectorAll('.proto-bar button').forEach(b => b.classList.toggle('active', b.dataset.screen === name));
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+  document.querySelectorAll('.proto-bar button').forEach(b => b.addEventListener('click', async () => {
+    if (b.dataset.screen === 'admin') {
+      const podeEntrar = await window.verificarAcessoAdmin?.()
+      if (!podeEntrar) { goto('login'); return }
+      goto('admin')
+      window.carregarDadosAdmin?.()
+      return
+    }
+    goto(b.dataset.screen)
+  }));
+  document.querySelectorAll('[data-goto]').forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); goto(b.dataset.goto); }));
+
+  function showTab(name){
+    document.querySelectorAll('#screen-app .app-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('#screen-app .side-link[data-tab]').forEach(l => l.classList.toggle('active', l.dataset.tab === name));
+    document.querySelector('#screen-app .app-main').scrollTo({top:0, behavior:'instant'});
+  }
+  document.querySelectorAll('#screen-app [data-tab]').forEach(l => l.addEventListener('click', (e) => { e.preventDefault(); showTab(l.dataset.tab); }));
+  document.querySelectorAll('#screen-app [data-tab-goto]').forEach(l => l.addEventListener('click', (e) => { e.preventDefault(); showTab(l.dataset.tabGoto); }));
+
+  function showAdminTab(name){
+    document.querySelectorAll('#screen-admin .app-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('admintab-' + name).classList.add('active');
+    document.querySelectorAll('#screen-admin .side-link[data-admin-tab]').forEach(l => l.classList.toggle('active', l.dataset.adminTab === name));
+  }
+  document.querySelectorAll('#screen-admin [data-admin-tab]').forEach(l => l.addEventListener('click', (e) => { e.preventDefault(); showAdminTab(l.dataset.adminTab); }));
+
+  // landing "Ver Planos" scroll shortcut when already on landing
+  document.querySelectorAll('[data-goto="landing-planos"]').forEach(b => b.addEventListener('click', (e) => {
+    e.preventDefault(); goto('landing');
+    setTimeout(() => document.getElementById('planos-section').scrollIntoView({behavior:'smooth'}), 50);
+  }));
+</script>
+
+<!-- ===================================================================
+     INTEGRAÇÃO REAL COM O SUPABASE
+     Troque SUPABASE_URL e SUPABASE_ANON_KEY pelas suas (Project Settings → API)
+     =================================================================== -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+  const SUPABASE_URL = 'https://mtapuuspqqoqtlmcfqkm.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10YXB1dXNwcXFvcXRsbWNmcWttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNTYyMzUsImV4cCI6MjA5ODkzMjIzNX0.zWG-UtHLf0w-fDBLrDVMmX6zQJBAf-tnj9Y_85bvOgo'
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  const NIVEL_LABEL = { iniciante: 'Iniciante', intermediaria: 'Intermediária', avancada: 'Avançada', feminina: 'Feminina' }
+  const DIA_LABEL = { segunda: 'Segunda', terca: 'Terça', quarta: 'Quarta', quinta: 'Quinta', sexta: 'Sexta' }
+  const DIA_INDEX = { segunda: 1, terca: 2, quarta: 3, quinta: 4, sexta: 5 } // 1 = segunda (ISO)
+
+  function dataDoDiaNaSemana(diaSemana, dataReferencia) {
+    const ref = new Date(dataReferencia + 'T00:00:00')
+    const diaAtualISO = ref.getDay() === 0 ? 7 : ref.getDay() // 1..7, segunda..domingo
+    const diff = DIA_INDEX[diaSemana] - diaAtualISO
+    const resultado = new Date(ref)
+    resultado.setDate(ref.getDate() + diff)
+    return resultado.toISOString().slice(0, 10)
+  }
+
+  const DIA_ABREV = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+
+  function formatarDataCurta(dataISO) {
+    const d = new Date(dataISO + 'T00:00:00')
+    return {
+      dia: String(d.getDate()).padStart(2, '0'),
+      mes: String(d.getMonth() + 1).padStart(2, '0'),
+      abrev: DIA_ABREV[d.getDay()]
+    }
+  }
+
+  function tempoRelativo(isoString) {
+    const diffMs = Date.now() - new Date(isoString).getTime()
+    const diffH = Math.floor(diffMs / 3600000)
+    if (diffH < 1) return 'Agora'
+    if (diffH < 24) return `Há ${diffH}h`
+    const diffD = Math.floor(diffH / 24)
+    if (diffD < 7) return diffD === 1 ? '1 dia' : `${diffD} dias`
+    const diffSem = Math.floor(diffD / 7)
+    return diffSem === 1 ? '1 semana' : `${diffSem} semanas`
+  }
+
+  // ---------------------------------------------------------------
+  // RESTAURA SESSÃO (se já estiver logado, pula a tela de login)
+  // ---------------------------------------------------------------
+  ;(async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) return
+    const { data: perfil } = await supabase.from('profiles').select('tipo').eq('id', session.user.id).single()
+    if (perfil?.tipo === 'admin') {
+      goto('admin')
+      carregarTurmasSelect()
+      carregarPlanosSelect()
+      carregarSaudacaoAdmin()
+    } else {
+      goto('app')
+      carregarAgendaAluno()
+      carregarPerfil()
+      carregarPlanosAluno()
+      carregarSaudacaoAluno()
+      carregarDashboardAluno()
+    }
+  })()
+
+  // ---------------------------------------------------------------
+  // SAIR (logout de verdade)
+  // ---------------------------------------------------------------
+  document.querySelectorAll('.btn-sair').forEach(link => {
+    link.addEventListener('click', async () => {
+      await supabase.auth.signOut()
+    })
+  })
+
+  // ---------------------------------------------------------------
+  // PROTEGE A ÁREA ADMIN (só entra quem realmente é admin)
+  // ---------------------------------------------------------------
+  window.verificarAcessoAdmin = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) return false
+    const { data: perfil } = await supabase.from('profiles').select('tipo').eq('id', session.user.id).single()
+    return perfil?.tipo === 'admin'
+  }
+  window.carregarDadosAdmin = () => {
+    carregarTurmasSelect()
+    carregarPlanosSelect()
+    carregarSaudacaoAdmin()
+  }
+
+  // ---------------------------------------------------------------
+  // LOGIN
+  // ---------------------------------------------------------------
+  const loginForm = document.getElementById('login-form')
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const email = document.getElementById('login-email').value
+      const senha = document.getElementById('login-senha').value
+      const erroBox = document.getElementById('login-erro')
+      erroBox.style.display = 'none'
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha })
+      if (error) {
+        erroBox.style.background = 'rgba(255,107,53,0.12)'
+        erroBox.style.color = '#E85A2A'
+        erroBox.textContent = 'E-mail ou senha inválidos.'
+        erroBox.style.display = 'block'
+        return
+      }
+
+      const { data: perfil } = await supabase
+        .from('profiles')
+        .select('tipo')
+        .eq('id', data.user.id)
+        .single()
+
+      if (perfil?.tipo === 'admin') {
+        goto('admin')
+        carregarTurmasSelect()
+        carregarPlanosSelect()
+        carregarSaudacaoAdmin()
+      } else {
+        goto('app')
+        carregarAgendaAluno()
+        carregarPerfil()
+        carregarPlanosAluno()
+        carregarSaudacaoAluno()
+        carregarDashboardAluno()
+      }
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // ESQUECI MINHA SENHA
+  // ---------------------------------------------------------------
+  const esqueciSenha = document.getElementById('esqueci-senha')
+  if (esqueciSenha) {
+    esqueciSenha.addEventListener('click', async (e) => {
+      e.preventDefault()
+      const email = document.getElementById('login-email').value
+      const erroBox = document.getElementById('login-erro')
+      erroBox.style.display = 'none'
+
+      erroBox.style.background = 'rgba(255,107,53,0.12)'
+      erroBox.style.color = '#E85A2A'
+
+      if (!email) {
+        erroBox.textContent = 'Preencha seu e-mail no campo acima antes de clicar em "Esqueci minha senha".'
+        erroBox.style.display = 'block'
+        return
+      }
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email)
+
+      if (error) {
+        erroBox.textContent = error.message
+        erroBox.style.display = 'block'
+        return
+      }
+
+      erroBox.style.background = 'rgba(46,196,182,0.16)'
+      erroBox.style.color = '#21A99C'
+      erroBox.textContent = 'Enviamos um link de redefinição de senha para ' + email + '.'
+      erroBox.style.display = 'block'
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // CADASTRO (criar conta)
+  // ---------------------------------------------------------------
+  const irParaCadastro = document.getElementById('ir-para-cadastro')
+  const irParaLogin = document.getElementById('ir-para-login')
+  if (irParaCadastro) {
+    irParaCadastro.addEventListener('click', (e) => {
+      e.preventDefault()
+      document.getElementById('login-form').style.display = 'none'
+      document.getElementById('signup-form').style.display = 'block'
+    })
+  }
+  if (irParaLogin) {
+    irParaLogin.addEventListener('click', (e) => {
+      e.preventDefault()
+      document.getElementById('signup-form').style.display = 'none'
+      document.getElementById('login-form').style.display = 'block'
+    })
+  }
+
+  const signupForm = document.getElementById('signup-form')
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const nome = document.getElementById('signup-nome').value
+      const email = document.getElementById('signup-email').value
+      const senha = document.getElementById('signup-senha').value
+      const erroBox = document.getElementById('signup-erro')
+      const sucessoBox = document.getElementById('signup-sucesso')
+      erroBox.style.display = 'none'
+      sucessoBox.style.display = 'none'
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: senha,
+        options: { data: { nome } }
+      })
+
+      if (error) {
+        erroBox.textContent = error.message
+        erroBox.style.display = 'block'
+        return
+      }
+
+      signupForm.reset()
+      sucessoBox.textContent = 'Conta criada! Verifique seu e-mail para confirmar antes de entrar.'
+      sucessoBox.style.display = 'block'
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // AGENDA (aluno) — agendar/cancelar aula de verdade
+  // ---------------------------------------------------------------
+  async function carregarAgendaAluno() {
+    const container = document.getElementById('agenda-week-aluno')
+    if (!container) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const hoje = new Date().toISOString().slice(0, 10)
+
+    const { data: turmas, error } = await supabase
+      .from('turmas')
+      .select('*')
+      .order('dia_semana')
+      .order('hora_inicio')
+
+    if (error) { console.error(error); return }
+
+    const { data: meusAgendamentos } = await supabase
+      .from('agendamentos')
+      .select('id, turma_id, data')
+      .eq('usuario_id', user.id)
+      .eq('status', 'confirmada')
+
+    const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta']
+
+    const colunas = await Promise.all(dias.map(async (dia) => {
+      const turmasDoDia = turmas.filter(t => t.dia_semana === dia)
+      const dataDoDia = dataDoDiaNaSemana(dia, hoje)
+
+      const cards = await Promise.all(turmasDoDia.map(async (turma) => {
+        const { count } = await supabase
+          .from('agendamentos')
+          .select('*', { count: 'exact', head: true })
+          .eq('turma_id', turma.id)
+          .eq('data', dataDoDia)
+          .eq('status', 'confirmada')
+
+        const vagasLivres = turma.capacidade_max - (count ?? 0)
+        const meuAgendamento = meusAgendamentos?.find(a => a.turma_id === turma.id && a.data === dataDoDia)
+        const nivelClasse = turma.nivel === 'iniciante' ? '' : `lv-${turma.nivel}`
+
+        let botao, meta, metaClasse = 'slot-meta'
+        if (meuAgendamento) {
+          meta = 'Prof. Edu · <b>Agendada</b>'
+          botao = `<button class="btn btn-ghost btn-sm btn-block" data-cancelar-agendamento="${meuAgendamento.id}">Cancelar</button>`
+        } else if (vagasLivres <= 0) {
+          meta = 'Prof. Edu · <b>0 vagas</b>'
+          metaClasse = 'slot-meta low'
+          botao = `<button class="btn btn-ghost btn-sm btn-block" disabled>Lotada</button>`
+        } else {
+          meta = `Prof. Edu · <b>${vagasLivres} ${vagasLivres === 1 ? 'vaga' : 'vagas'}</b> livre${vagasLivres === 1 ? '' : 's'}`
+          if (vagasLivres <= 2) metaClasse = 'slot-meta low'
+          botao = `<button class="btn ${vagasLivres <= 2 ? 'btn-primary' : 'btn-outline'} btn-sm btn-block" data-agendar-turma="${turma.id}" data-agendar-data="${dataDoDia}">Agendar</button>`
+        }
+
+        return `<div class="slot-card ${nivelClasse}">
+          <div class="slot-time">${turma.hora_inicio.slice(0,5)} – ${turma.hora_fim.slice(0,5)}</div>
+          <div class="slot-level">Turma ${NIVEL_LABEL[turma.nivel]}</div>
+          <div class="${metaClasse}">${meta}</div>
+          ${botao}
+        </div>`
+      }))
+
+      return `<div class="agenda-day-col"><h3>${DIA_LABEL[dia]}</h3>${cards.join('')}</div>`
+    }))
+
+    container.innerHTML = colunas.join('')
+
+    container.querySelectorAll('[data-agendar-turma]').forEach(btn => btn.addEventListener('click', async () => {
+      const { error } = await supabase.rpc('agendar_aula', {
+        p_turma_id: Number(btn.dataset.agendarTurma),
+        p_data: btn.dataset.agendarData
+      })
+      if (error) { alert(error.message); return }
+      carregarAgendaAluno()
+    }))
+
+    container.querySelectorAll('[data-cancelar-agendamento]').forEach(btn => btn.addEventListener('click', async () => {
+      const { error } = await supabase.rpc('cancelar_aula', { p_agendamento_id: btn.dataset.cancelarAgendamento })
+      if (error) { alert(error.message); return }
+      carregarAgendaAluno()
+    }))
+  }
+
+  // ---------------------------------------------------------------
+  // SAUDAÇÃO / SIDEBAR (admin) — nome e avatar reais
+  // ---------------------------------------------------------------
+  async function carregarSaudacaoAdmin() {
+    const nomeEl = document.getElementById('sidebar-admin-nome')
+    if (!nomeEl) return
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: perfil } = await supabase.from('profiles').select('nome').eq('id', user.id).single()
+    const nome = perfil?.nome ?? 'Admin'
+    document.getElementById('sidebar-admin-avatar').textContent = nome.charAt(0).toUpperCase()
+    nomeEl.textContent = nome
+  }
+
+  // ---------------------------------------------------------------
+  // SAUDAÇÃO / SIDEBAR (aluno) — nome, avatar e plano reais
+  // ---------------------------------------------------------------
+  async function carregarSaudacaoAluno() {
+    const nomeEl = document.getElementById('sidebar-nome')
+    if (!nomeEl) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: perfil } = await supabase.from('profiles').select('nome').eq('id', user.id).single()
+    const { data: assinatura } = await supabase
+      .from('assinaturas')
+      .select('planos(nome)')
+      .eq('usuario_id', user.id)
+      .eq('ativo', true)
+      .single()
+
+    const nome = perfil?.nome ?? 'Aluno'
+    const primeiroNome = nome.split(' ')[0]
+
+    document.getElementById('sidebar-avatar').textContent = nome.charAt(0).toUpperCase()
+    nomeEl.textContent = nome
+    document.getElementById('sidebar-plano').textContent = assinatura?.planos?.nome ? `Plano ${assinatura.planos.nome}` : 'Sem plano ativo'
+    const saudacaoEl = document.getElementById('dashboard-saudacao')
+    if (saudacaoEl) saudacaoEl.textContent = `Olá, ${primeiroNome} 🏐`
+
+    const dataSubEl = document.getElementById('dashboard-data-sub')
+    if (dataSubEl) {
+      const hoje = new Date()
+      const diasSemanaCompleto = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
+      const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
+      dataSubEl.textContent = `${diasSemanaCompleto[hoje.getDay()]}, ${hoje.getDate()} de ${meses[hoje.getMonth()]} — bora pra areia?`
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // DASHBOARD (aluno)
+  // ---------------------------------------------------------------
+  async function carregarDashboardAluno() {
+    const proximasEl = document.getElementById('dash-proximas-lista')
+    if (!proximasEl) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const hoje = new Date().toISOString().slice(0, 10)
+
+    const { data: assinatura } = await supabase
+      .from('assinaturas')
+      .select('planos(nome, aulas_por_semana)')
+      .eq('usuario_id', user.id)
+      .eq('ativo', true)
+      .single()
+
+    const inicioSemana = new Date()
+    inicioSemana.setDate(inicioSemana.getDate() - (inicioSemana.getDay() || 7) + 1)
+    const dataInicioSemana = inicioSemana.toISOString().slice(0, 10)
+
+    const { count: usadasNaSemana } = await supabase
+      .from('agendamentos')
+      .select('*', { count: 'exact', head: true })
+      .eq('usuario_id', user.id)
+      .eq('status', 'confirmada')
+      .gte('data', dataInicioSemana)
+
+    const { count: totalRealizadas } = await supabase
+      .from('agendamentos')
+      .select('*', { count: 'exact', head: true })
+      .eq('usuario_id', user.id)
+      .in('status', ['confirmada', 'concluida'])
+      .lt('data', hoje)
+
+    const { data: proximas } = await supabase
+      .from('agendamentos')
+      .select('id, data, turmas(nivel, hora_inicio, hora_fim)')
+      .eq('usuario_id', user.id)
+      .eq('status', 'confirmada')
+      .gte('data', hoje)
+      .order('data')
+      .limit(5)
+
+    const { data: historico } = await supabase
+      .from('agendamentos')
+      .select('id, data, status, turmas(nivel, hora_inicio, hora_fim)')
+      .eq('usuario_id', user.id)
+      .lt('data', hoje)
+      .order('data', { ascending: false })
+      .limit(3)
+
+    const limite = assinatura?.planos?.aulas_por_semana ?? 0
+    document.getElementById('dash-plano-nome').textContent = assinatura?.planos?.nome ?? 'Sem plano'
+    document.getElementById('dash-plano-sub').textContent = assinatura ? `Plano atual · ${limite}x/semana` : 'Nenhum plano ativo'
+    document.getElementById('dash-aulas-disponiveis').textContent = limite ? `${Math.max(0, limite - (usadasNaSemana ?? 0))} de ${limite}` : '0 de 0'
+    document.getElementById('dash-total-realizadas').textContent = totalRealizadas ?? 0
+
+    const proximaAulaEl = document.getElementById('dash-proxima-aula')
+    if (proximas?.[0]) {
+      const { abrev } = formatarDataCurta(proximas[0].data)
+      proximaAulaEl.textContent = `${abrev} · ${proximas[0].turmas.hora_inicio.slice(0, 5)}`
+    } else {
+      proximaAulaEl.textContent = '—'
+    }
+
+    proximasEl.innerHTML = proximas?.length
+      ? proximas.map(a => {
+          const { dia, abrev } = formatarDataCurta(a.data)
+          return `<div class="lesson-row">
+            <div class="lesson-date"><b>${dia}</b><span>${abrev}</span></div>
+            <div class="lesson-info"><b>Turma ${NIVEL_LABEL[a.turmas.nivel]} · ${a.turmas.hora_inicio.slice(0,5)}–${a.turmas.hora_fim.slice(0,5)}</b><span>Prof. Edu</span></div>
+            <div class="status-chip confirmada">Confirmada</div>
+          </div>`
+        }).join('')
+      : '<div class="empty-state">Nenhuma aula agendada ainda.</div>'
+
+    document.getElementById('dash-historico-lista').innerHTML = historico?.length
+      ? historico.map(a => {
+          const { dia, abrev } = formatarDataCurta(a.data)
+          const statusClasse = a.status === 'cancelada' ? 'cancelada' : 'concluida'
+          const statusLabel = a.status === 'cancelada' ? 'Cancelada' : 'Concluída'
+          return `<div class="lesson-row">
+            <div class="lesson-date"><b>${dia}</b><span>${abrev}</span></div>
+            <div class="lesson-info"><b>Turma ${NIVEL_LABEL[a.turmas.nivel]} · ${a.turmas.hora_inicio.slice(0,5)}–${a.turmas.hora_fim.slice(0,5)}</b><span>${statusLabel}</span></div>
+            <div class="status-chip ${statusClasse}">${statusLabel}</div>
+          </div>`
+        }).join('')
+      : '<div class="empty-state">Nenhuma aula no histórico ainda.</div>'
+  }
+
+  // ---------------------------------------------------------------
+  // MINHAS AULAS (aluno)
+  // ---------------------------------------------------------------
+  async function carregarMinhasAulas() {
+    const tbody = document.getElementById('tbody-minhas-aulas')
+    if (!tbody) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: lista, error } = await supabase
+      .from('agendamentos')
+      .select('id, data, status, turmas(nivel, hora_inicio, hora_fim)')
+      .eq('usuario_id', user.id)
+      .order('data', { ascending: false })
+
+    if (error) { console.error(error); return }
+
+    if (!lista.length) {
+      tbody.innerHTML = `<tr><td colspan="4" style="color:rgba(30,43,43,.5);">Nenhuma aula agendada ainda.</td></tr>`
+      return
+    }
+
+    tbody.innerHTML = lista.map(item => {
+      const { dia, mes, abrev } = formatarDataCurta(item.data)
+      const statusClasse = item.status === 'confirmada' ? 'ok' : item.status === 'cancelada' ? 'warn' : 'info'
+      const statusLabel = item.status === 'confirmada' ? 'Agendada' : item.status === 'cancelada' ? 'Cancelada' : 'Concluída'
+      return `<tr>
+        <td>${dia}/${mes} · ${abrev}</td>
+        <td>${NIVEL_LABEL[item.turmas?.nivel] ?? '—'}</td>
+        <td>${item.turmas ? item.turmas.hora_inicio.slice(0,5) + '–' + item.turmas.hora_fim.slice(0,5) : '—'}</td>
+        <td><span class="pill ${statusClasse}">${statusLabel}</span></td>
+      </tr>`
+    }).join('')
+  }
+
+  // ---------------------------------------------------------------
+  // NOTIFICAÇÕES (aluno)
+  // ---------------------------------------------------------------
+  const NOTIF_ICONS = {
+    aula_confirmada: { bg: 'rgba(46,196,182,0.16)', svg: '<path d="M5 13l4 4L19 7" stroke="#21A99C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' },
+    lembrete: { bg: 'rgba(11,79,108,0.1)', svg: '<circle cx="12" cy="12" r="9" stroke="#0B4F6C" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="#0B4F6C" stroke-width="2" stroke-linecap="round"/>' },
+    alteracao_horario: { bg: 'rgba(255,107,53,0.14)', svg: '<path d="M12 3v18M3 12h18" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>' },
+    cancelamento: { bg: 'rgba(200,87,125,0.14)', svg: '<path d="M18 6L6 18M6 6l12 12" stroke="#C8577D" stroke-width="2.2" stroke-linecap="round"/>' },
+    limite_plano: { bg: 'rgba(255,107,53,0.14)', svg: '<path d="M12 2l3 6 6.5.9-4.7 4.6 1.1 6.5-5.9-3.1-5.9 3.1 1.1-6.5L2.5 8.9 9 8z" stroke="#FF6B35" stroke-width="2" stroke-linejoin="round"/>' },
+    nova_turma: { bg: 'rgba(46,196,182,0.16)', svg: '<path d="M4 20l6-14 4 8 3-6 3 12" stroke="#21A99C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' }
+  }
+  const NOTIF_TITULOS = {
+    aula_confirmada: 'Aula confirmada',
+    lembrete: 'Lembrete de aula',
+    alteracao_horario: 'Alteração de horário',
+    cancelamento: 'Cancelamento de aula',
+    limite_plano: 'Aviso sobre o plano',
+    nova_turma: 'Nova turma disponível'
+  }
+
+  async function carregarNotificacoesAluno() {
+    const container = document.getElementById('notificacoes-lista-aluno')
+    if (!container) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: lista, error } = await supabase
+      .from('notificacoes')
+      .select('id, tipo, mensagem, lida, criado_em')
+      .eq('usuario_id', user.id)
+      .order('criado_em', { ascending: false })
+
+    if (error) { console.error(error); return }
+
+    container.innerHTML = lista.length
+      ? lista.map(n => {
+          const ic = NOTIF_ICONS[n.tipo] ?? NOTIF_ICONS.lembrete
+          return `<div class="notif-row" style="${n.lida ? 'opacity:.55;' : ''}">
+            <div class="notif-ic" style="background:${ic.bg};"><svg width="17" height="17" viewBox="0 0 24 24" fill="none">${ic.svg}</svg></div>
+            <div class="notif-info"><b>${NOTIF_TITULOS[n.tipo] ?? n.tipo}</b><span>${n.mensagem}</span></div>
+            <div class="notif-time">${tempoRelativo(n.criado_em)}</div>
+          </div>`
+        }).join('')
+      : '<div class="empty-state">Nenhuma notificação por enquanto.</div>'
+
+    const idsNaoLidas = lista.filter(n => !n.lida).map(n => n.id)
+    if (idsNaoLidas.length) {
+      await supabase.from('notificacoes').update({ lida: true }).in('id', idsNaoLidas)
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // PERFIL (aluno)
+  // ---------------------------------------------------------------
+  async function carregarPerfil() {
+    const nomeInput = document.getElementById('perfil-nome')
+    if (!nomeInput) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: perfil } = await supabase
+      .from('profiles')
+      .select('nome, telefone, nivel')
+      .eq('id', user.id)
+      .single()
+
+    nomeInput.value = perfil?.nome ?? ''
+    document.getElementById('perfil-email').value = user.email ?? ''
+    document.getElementById('perfil-telefone').value = perfil?.telefone ?? ''
+    document.getElementById('perfil-nivel').value = perfil?.nivel ? NIVEL_LABEL[perfil.nivel] : '—'
+  }
+
+  const btnSalvarPerfil = document.getElementById('btn-salvar-perfil')
+  if (btnSalvarPerfil) {
+    btnSalvarPerfil.addEventListener('click', async () => {
+      const sucessoBox = document.getElementById('perfil-sucesso')
+      const { data: { user } } = await supabase.auth.getUser()
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          nome: document.getElementById('perfil-nome').value,
+          telefone: document.getElementById('perfil-telefone').value
+        })
+        .eq('id', user.id)
+
+      if (error) { alert(error.message); return }
+
+      sucessoBox.textContent = 'Perfil atualizado com sucesso.'
+      sucessoBox.style.display = 'block'
+      setTimeout(() => sucessoBox.style.display = 'none', 4000)
+      carregarSaudacaoAluno()
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // PLANOS (aluno)
+  // ---------------------------------------------------------------
+  async function carregarPlanosAluno() {
+    const grid = document.getElementById('planos-grid-aluno')
+    if (!grid) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    const { data: assinatura } = await supabase
+      .from('assinaturas')
+      .select('id, plano_id, planos(nome, aulas_por_semana)')
+      .eq('usuario_id', user.id)
+      .eq('ativo', true)
+      .single()
+
+    const { data: todosPlanos } = await supabase.from('planos').select('*').order('aulas_por_semana')
+
+    const inicioSemana = new Date()
+    inicioSemana.setDate(inicioSemana.getDate() - (inicioSemana.getDay() || 7) + 1)
+    const dataInicio = inicioSemana.toISOString().slice(0, 10)
+
+    const { count: usadasNaSemana } = await supabase
+      .from('agendamentos')
+      .select('*', { count: 'exact', head: true })
+      .eq('usuario_id', user.id)
+      .eq('status', 'confirmada')
+      .gte('data', dataInicio)
+
+    const banner = document.getElementById('plano-atual-banner')
+    if (assinatura) {
+      const limite = assinatura.planos.aulas_por_semana
+      const usadas = usadasNaSemana ?? 0
+      const pct = Math.min(100, Math.round((usadas / limite) * 100))
+      banner.querySelector('h2').textContent = `${assinatura.planos.nome} — ${limite} aula${limite === 1 ? '' : 's'} por semana`
+      banner.querySelector('.progress-bar i').style.width = pct + '%'
+    } else {
+      banner.querySelector('h2').textContent = 'Nenhum plano ativo'
+      banner.querySelector('.progress-bar i').style.width = '0%'
+    }
+
+    grid.innerHTML = todosPlanos.map(p => {
+      const ehAtual = assinatura?.plano_id === p.id
+      const botao = ehAtual
+        ? `<button class="btn btn-dark btn-block btn-sm" disabled>Plano atual</button>`
+        : `<button class="btn btn-outline btn-block btn-sm" data-mudar-plano="${p.id}">Alterar Plano</button>`
+      return `<div class="plan-card ${ehAtual ? 'featured' : ''}">
+        ${ehAtual ? '<div class="plan-badge">Seu plano</div>' : ''}
+        <div class="plan-name">${p.nome}</div>
+        <div class="plan-freq">${p.aulas_por_semana} aula${p.aulas_por_semana === 1 ? '' : 's'} / semana</div>
+        <ul class="plan-list"><li>${p.descricao ?? ''}</li></ul>
+        ${botao}
+      </div>`
+    }).join('')
+
+    grid.querySelectorAll('[data-mudar-plano]').forEach(btn => btn.addEventListener('click', async () => {
+      const novoPlanoId = btn.dataset.mudarPlano
+      if (assinatura) {
+        await supabase.from('assinaturas').update({ ativo: false }).eq('id', assinatura.id)
+      }
+      const { error } = await supabase.from('assinaturas').insert({ usuario_id: user.id, plano_id: novoPlanoId, ativo: true })
+      if (error) { alert(error.message); return }
+      carregarPlanosAluno()
+    }))
+  }
+
+  // Carrega dados ao trocar de aba da área do aluno
+  document.querySelectorAll('#screen-app [data-tab]').forEach(link => {
+    link.addEventListener('click', () => {
+      const tab = link.dataset.tab
+      if (tab === 'dashboard') carregarDashboardAluno()
+      if (tab === 'agenda') carregarAgendaAluno()
+      if (tab === 'perfil') carregarPerfil()
+      if (tab === 'planos') carregarPlanosAluno()
+      if (tab === 'minhas-aulas') carregarMinhasAulas()
+      if (tab === 'notificacoes') carregarNotificacoesAluno()
+    })
+  })
+  document.querySelectorAll('#screen-app [data-tab-goto]').forEach(link => {
+    link.addEventListener('click', () => {
+      const tab = link.dataset.tabGoto
+      if (tab === 'dashboard') carregarDashboardAluno()
+      if (tab === 'agenda') carregarAgendaAluno()
+      if (tab === 'perfil') carregarPerfil()
+      if (tab === 'planos') carregarPlanosAluno()
+      if (tab === 'minhas-aulas') carregarMinhasAulas()
+      if (tab === 'notificacoes') carregarNotificacoesAluno()
+    })
+  })
+
+  // ---------------------------------------------------------------
+  // AGENDA & VAGAS (admin)
+  // ---------------------------------------------------------------
+  async function carregarTurmasSelect() {
+    const select = document.getElementById('admin-select-turma')
+    const dataInput = document.getElementById('admin-select-data')
+    if (!select) return
+
+    const { data: turmas, error } = await supabase
+      .from('turmas')
+      .select('*')
+      .order('dia_semana')
+      .order('hora_inicio')
+
+    if (error) { console.error(error); return }
+
+    select.innerHTML = turmas.map(t =>
+      `<option value="${t.id}">${DIA_LABEL[t.dia_semana]} · ${t.hora_inicio.slice(0,5)} · ${NIVEL_LABEL[t.nivel]}</option>`
+    ).join('')
+
+    select.dataset.turmas = JSON.stringify(turmas)
+
+    if (!dataInput.value) dataInput.value = new Date().toISOString().slice(0, 10)
+
+    select.onchange = () => sincronizarDataComTurma()
+    dataInput.onchange = () => { carregarAlunosDaTurma(); carregarPresenca() }
+    sincronizarDataComTurma()
+    carregarVisaoSemana()
+  }
+
+  function sincronizarDataComTurma() {
+    const select = document.getElementById('admin-select-turma')
+    const dataInput = document.getElementById('admin-select-data')
+    const turmas = JSON.parse(select.dataset.turmas || '[]')
+    const turma = turmas.find(t => String(t.id) === select.value)
+    if (turma) dataInput.value = dataDoDiaNaSemana(turma.dia_semana, dataInput.value)
+    carregarAlunosDaTurma()
+    carregarPresenca()
+  }
+
+  async function carregarAlunosDaTurma() {
+    const select = document.getElementById('admin-select-turma')
+    const dataInput = document.getElementById('admin-select-data')
+    const tbody = document.getElementById('tbody-alunos-turma')
+    const infoPill = document.getElementById('admin-vagas-info')
+    if (!select?.value || !dataInput?.value) return
+
+    const turmas = JSON.parse(select.dataset.turmas || '[]')
+    const turma = turmas.find(t => String(t.id) === select.value)
+
+    const { data: lista, error } = await supabase
+      .from('agendamentos')
+      .select('id, status, usuario_id, profiles(nome)')
+      .eq('turma_id', select.value)
+      .eq('data', dataInput.value)
+
+    if (error) { console.error(error); return }
+
+    const vagasOcupadas = lista.filter(a => a.status === 'confirmada').length
+    infoPill.textContent = `${vagasOcupadas} de ${turma.capacidade_max} vagas ocupadas`
+
+    if (lista.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="color:rgba(30,43,43,.5);">Nenhum aluno agendado para esta turma/data.</td></tr>`
+      return
+    }
+
+    const linhas = await Promise.all(lista.map(async (item) => {
+      const { data: assinatura } = await supabase
+        .from('assinaturas').select('planos(nome)')
+        .eq('usuario_id', item.usuario_id).eq('ativo', true).single()
+      const statusClasse = item.status === 'confirmada' ? 'ok' : item.status === 'cancelada' ? 'warn' : 'info'
+      return `<tr>
+        <td>${item.profiles?.nome ?? '—'}</td>
+        <td>${assinatura?.planos?.nome ?? '—'}</td>
+        <td><span class="pill ${statusClasse}">${item.status}</span></td>
+        <td>
+          <span class="icon-btn" data-confirmar="${item.id}">✓</span>
+          <span class="icon-btn" data-cancelar="${item.id}">✕</span>
+        </td>
+      </tr>`
+    }))
+    tbody.innerHTML = linhas.join('')
+
+    tbody.querySelectorAll('[data-confirmar]').forEach(el => el.addEventListener('click', async () => {
+      await supabase.from('agendamentos').update({ status: 'confirmada' }).eq('id', el.dataset.confirmar)
+      carregarAlunosDaTurma()
+    }))
+    tbody.querySelectorAll('[data-cancelar]').forEach(el => el.addEventListener('click', async () => {
+      const { data: ag } = await supabase.from('agendamentos').update({ status: 'cancelada' }).eq('id', el.dataset.cancelar).select('usuario_id').single()
+      if (ag) await supabase.from('notificacoes').insert({ usuario_id: ag.usuario_id, tipo: 'cancelamento', mensagem: 'Sua aula foi cancelada pelo professor.' })
+      carregarAlunosDaTurma()
+    }))
+  }
+
+  async function carregarVisaoSemana() {
+    const dataInput = document.getElementById('admin-select-data')
+    const tbody = document.getElementById('tbody-visao-semana')
+    if (!dataInput?.value) return
+
+    const { data: turmas } = await supabase.from('turmas').select('*')
+    const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta']
+    const niveis = ['iniciante', 'intermediaria', 'avancada', 'feminina']
+
+    const linhas = await Promise.all(dias.map(async (dia) => {
+      const dataDoDia = dataDoDiaNaSemana(dia, dataInput.value)
+      const celulas = await Promise.all(niveis.map(async (nivel) => {
+        const turma = turmas.find(t => t.dia_semana === dia && t.nivel === nivel)
+        if (!turma) return '—'
+        const { count } = await supabase.from('agendamentos').select('*', { count: 'exact', head: true })
+          .eq('turma_id', turma.id).eq('data', dataDoDia).eq('status', 'confirmada')
+        return `${count ?? 0}/${turma.capacidade_max}`
+      }))
+      return `<tr><td>${DIA_LABEL[dia]}</td>${celulas.map(c => `<td>${c}</td>`).join('')}</tr>`
+    }))
+    tbody.innerHTML = linhas.join('')
+  }
+
+  // ---------------------------------------------------------------
+  // ALUNOS (admin)
+  // ---------------------------------------------------------------
+  async function carregarPlanosSelect() {
+    const select = document.getElementById('cad-plano')
+    if (!select) return
+    const { data: planos } = await supabase.from('planos').select('*').order('aulas_por_semana')
+    select.innerHTML = planos.map(p => `<option value="${p.id}">${p.nome} (${p.aulas_por_semana}x/semana)</option>`).join('')
+    select.dataset.planos = JSON.stringify(planos)
+  }
+
+  async function carregarTodosAlunos() {
+    const tbody = document.getElementById('tbody-todos-alunos')
+    if (!tbody) return
+    const { data: alunos, error } = await supabase.from('profiles').select('id, nome, nivel').eq('tipo', 'aluno').order('nome')
+    if (error) { console.error(error); return }
+
+    const { data: todosPlanos } = await supabase.from('planos').select('*').order('aulas_por_semana')
+    const NIVEIS = ['iniciante', 'intermediaria', 'avancada', 'feminina']
+
+    const linhas = await Promise.all(alunos.map(async (aluno) => {
+      const { data: assinatura } = await supabase.from('assinaturas').select('plano_id, planos(nome)').eq('usuario_id', aluno.id).eq('ativo', true).single()
+      const opcoesNivel = NIVEIS.map(n => `<option value="${n}" ${n === aluno.nivel ? 'selected' : ''}>${NIVEL_LABEL[n]}</option>`).join('')
+      const opcoesPlano = '<option value="">Nenhum plano</option>' + todosPlanos.map(p => `<option value="${p.id}" ${p.id === assinatura?.plano_id ? 'selected' : ''}>${p.nome}</option>`).join('')
+      return `<tr>
+        <td>${aluno.nome}</td>
+        <td><select data-usuario-nivel="${aluno.id}" style="padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);">${opcoesNivel}</select></td>
+        <td><select data-usuario-plano="${aluno.id}" style="padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);">${opcoesPlano}</select></td>
+        <td>
+          <button class="btn btn-ghost btn-sm" data-salvar-nivel="${aluno.id}">Salvar nível</button>
+          <button class="btn btn-ghost btn-sm" data-salvar-plano-aluno="${aluno.id}">Salvar plano</button>
+        </td>
+      </tr>`
+    }))
+    tbody.innerHTML = linhas.length ? linhas.join('') : `<tr><td colspan="4" style="color:rgba(30,43,43,.5);">Nenhum aluno cadastrado ainda.</td></tr>`
+
+    tbody.querySelectorAll('[data-salvar-nivel]').forEach(btn => btn.addEventListener('click', async () => {
+      const usuarioId = btn.dataset.salvarNivel
+      const select = tbody.querySelector(`[data-usuario-nivel="${usuarioId}"]`)
+      const { error } = await supabase.from('profiles').update({ nivel: select.value }).eq('id', usuarioId)
+      if (error) { alert(error.message); return }
+      carregarTodosAlunos()
+    }))
+
+    tbody.querySelectorAll('[data-salvar-plano-aluno]').forEach(btn => btn.addEventListener('click', async () => {
+      const usuarioId = btn.dataset.salvarPlanoAluno
+      const select = tbody.querySelector(`[data-usuario-plano="${usuarioId}"]`)
+      const novoPlanoId = select.value
+
+      const { error: erroDesativar } = await supabase.from('assinaturas').update({ ativo: false }).eq('usuario_id', usuarioId).eq('ativo', true)
+      if (erroDesativar) { alert(erroDesativar.message); return }
+
+      if (novoPlanoId) {
+        const { error: erroInserir } = await supabase.from('assinaturas').insert({ usuario_id: usuarioId, plano_id: novoPlanoId, ativo: true })
+        if (erroInserir) { alert(erroInserir.message); return }
+        await supabase.from('notificacoes').insert({ usuario_id: usuarioId, tipo: 'nova_turma', mensagem: 'Seu plano foi atualizado pelo professor.' })
+      }
+
+      carregarTodosAlunos()
+    }))
+  }
+
+  const btnCadastrar = document.getElementById('btn-cadastrar-aluno')
+  if (btnCadastrar) {
+    btnCadastrar.addEventListener('click', async () => {
+      const erroBox = document.getElementById('cadastro-erro')
+      erroBox.style.display = 'none'
+      const nome = document.getElementById('cad-nome').value
+      const email = document.getElementById('cad-email').value
+      const nivel = document.getElementById('cad-nivel').value
+      const planoId = document.getElementById('cad-plano').value
+
+      if (!nome || !email) {
+        erroBox.textContent = 'Preencha nome e e-mail.'
+        erroBox.style.display = 'block'
+        return
+      }
+
+      // Cadastro de aluno exige a Edge Function "convidar-aluno" publicada no seu projeto
+      // (código completo no arquivo edge-function-convidar-aluno.md)
+      const { error } = await supabase.functions.invoke('convidar-aluno', {
+        body: { nome, email, nivel, planoId }
+      })
+
+      if (error) {
+        erroBox.textContent = 'Erro ao cadastrar: ' + error.message
+        erroBox.style.display = 'block'
+        return
+      }
+
+      document.getElementById('cad-nome').value = ''
+      document.getElementById('cad-email').value = ''
+      carregarTodosAlunos()
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // PLANOS (admin)
+  // ---------------------------------------------------------------
+  async function carregarPlanosAdmin() {
+    const tbody = document.getElementById('tbody-planos-admin')
+    if (!tbody) return
+    const { data: assinaturas, error } = await supabase
+      .from('assinaturas').select('usuario_id, profiles(nome), planos(id, nome, aulas_por_semana)').eq('ativo', true)
+    if (error) { console.error(error); return }
+
+    const { data: todosPlanos } = await supabase.from('planos').select('*').order('aulas_por_semana')
+
+    const inicioSemana = new Date()
+    inicioSemana.setDate(inicioSemana.getDate() - (inicioSemana.getDay() || 7) + 1)
+    const dataInicio = inicioSemana.toISOString().slice(0, 10)
+
+    const linhas = await Promise.all(assinaturas.map(async (a) => {
+      const { count } = await supabase.from('agendamentos').select('*', { count: 'exact', head: true })
+        .eq('usuario_id', a.usuario_id).eq('status', 'confirmada').gte('data', dataInicio)
+
+      const options = '<option value="">Nenhum plano</option>' + todosPlanos.map(p => `<option value="${p.id}" ${p.id === a.planos.id ? 'selected' : ''}>${p.nome}</option>`).join('')
+
+      return `<tr>
+        <td>${a.profiles?.nome ?? '—'}</td>
+        <td>${a.planos.nome} (${a.planos.aulas_por_semana}x)</td>
+        <td>${count ?? 0} / ${a.planos.aulas_por_semana}</td>
+        <td><select data-usuario="${a.usuario_id}" class="plano-select" style="padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);">${options}</select></td>
+        <td><button class="btn btn-ghost btn-sm" data-salvar-plano="${a.usuario_id}">Salvar</button></td>
+      </tr>`
+    }))
+    tbody.innerHTML = linhas.join('')
+
+    tbody.querySelectorAll('[data-salvar-plano]').forEach(btn => btn.addEventListener('click', async () => {
+      const usuarioId = btn.dataset.salvarPlano
+      const select = tbody.querySelector(`.plano-select[data-usuario="${usuarioId}"]`)
+      const novoPlanoId = select.value
+
+      const { error: erroDesativar } = await supabase.from('assinaturas').update({ ativo: false }).eq('usuario_id', usuarioId).eq('ativo', true)
+      if (erroDesativar) { alert(erroDesativar.message); return }
+
+      if (novoPlanoId) {
+        const { error: erroInserir } = await supabase.from('assinaturas').insert({ usuario_id: usuarioId, plano_id: novoPlanoId, ativo: true })
+        if (erroInserir) { alert(erroInserir.message); return }
+        await supabase.from('notificacoes').insert({ usuario_id: usuarioId, tipo: 'nova_turma', mensagem: 'Seu plano foi atualizado pelo professor.' })
+      }
+
+      carregarPlanosAdmin()
+    }))
+  }
+
+  // ---------------------------------------------------------------
+  // NOTIFICAÇÕES (admin)
+  // ---------------------------------------------------------------
+  const btnEnviarNotif = document.getElementById('btn-enviar-notif')
+  if (btnEnviarNotif) {
+    btnEnviarNotif.addEventListener('click', async () => {
+      const nivel = document.getElementById('notif-nivel').value
+      const tipo = document.getElementById('notif-tipo').value
+      const mensagem = document.getElementById('notif-mensagem').value
+      const sucessoBox = document.getElementById('notif-sucesso')
+
+      const { data: turmasDoNivel } = await supabase.from('turmas').select('id').eq('nivel', nivel)
+      const { data: agendamentos } = await supabase.from('agendamentos').select('usuario_id')
+        .in('turma_id', turmasDoNivel.map(t => t.id)).eq('status', 'confirmada')
+
+      const usuariosUnicos = [...new Set(agendamentos.map(a => a.usuario_id))]
+      const linhas = usuariosUnicos.map(usuario_id => ({ usuario_id, tipo, mensagem }))
+
+      if (linhas.length > 0) await supabase.from('notificacoes').insert(linhas)
+
+      sucessoBox.textContent = `Notificação enviada para ${linhas.length} aluno(s).`
+      sucessoBox.style.display = 'block'
+      setTimeout(() => sucessoBox.style.display = 'none', 4000)
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // PRESENÇA (admin)
+  // ---------------------------------------------------------------
+  async function carregarPresenca() {
+    const select = document.getElementById('admin-select-turma')
+    const dataInput = document.getElementById('admin-select-data')
+    const tbody = document.getElementById('tbody-presenca')
+    if (!tbody || !select?.value || !dataInput?.value) return
+
+    const { data: lista, error } = await supabase
+      .from('agendamentos')
+      .select('id, profiles(nome), presencas(presente)')
+      .eq('turma_id', select.value).eq('data', dataInput.value).eq('status', 'confirmada')
+
+    if (error) { console.error(error); return }
+
+    if (lista.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="2" style="color:rgba(30,43,43,.5);">Nenhum aluno confirmado para esta turma/data.</td></tr>`
+      return
+    }
+
+    tbody.innerHTML = lista.map(item => `
+      <tr><td>${item.profiles?.nome ?? '—'}</td>
+        <td><label style="display:flex;gap:8px;align-items:center;">
+          <input type="checkbox" data-agendamento="${item.id}" ${item.presencas?.[0]?.presente ? 'checked' : ''}> Presente
+        </label></td>
+      </tr>`).join('')
+  }
+
+  const btnSalvarPresenca = document.getElementById('btn-salvar-presenca')
+  if (btnSalvarPresenca) {
+    btnSalvarPresenca.addEventListener('click', async () => {
+      const tbody = document.getElementById('tbody-presenca')
+      const checkboxes = tbody.querySelectorAll('[data-agendamento]')
+      const sucessoBox = document.getElementById('presenca-sucesso')
+
+      await Promise.all(Array.from(checkboxes).map(cb =>
+        supabase.from('presencas').upsert({
+          agendamento_id: cb.dataset.agendamento,
+          presente: cb.checked,
+          marcado_em: new Date().toISOString()
+        })
+      ))
+
+      sucessoBox.textContent = 'Presença salva com sucesso.'
+      sucessoBox.style.display = 'block'
+      setTimeout(() => sucessoBox.style.display = 'none', 4000)
+    })
+  }
+
+  // ---------------------------------------------------------------
+  // Carrega dados ao trocar de aba admin
+  // ---------------------------------------------------------------
+  document.querySelectorAll('#screen-admin [data-admin-tab]').forEach(link => {
+    link.addEventListener('click', () => {
+      const tab = link.dataset.adminTab
+      if (tab === 'alunos-admin') carregarTodosAlunos()
+      if (tab === 'planos-admin') carregarPlanosAdmin()
+      if (tab === 'presenca-admin') carregarPresenca()
+    })
+  })
+
+</script>
+
+</body>
+</html>

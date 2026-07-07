@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(npx --version)",
+      "PowerShell(scoop --version 2>$null)",
+      "PowerShell(Get-Command supabase -ErrorAction SilentlyContinue)",
+      "PowerShell(py --version 2>&1)",
+      "PowerShell(python --version 2>&1)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8080/ --max-time 5)",
+      "PowerShell(scoop bucket add supabase https://github.com/supabase/scoop-bucket.git)",
+      "PowerShell(scoop install supabase)",
+      "PowerShell(supabase --version)"
+    ]
+  }
+}
