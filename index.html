@@ -8,7 +8,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Team F.E. — Agendamento de Futevôlei">
 <meta property="og:description" content="Sua areia, seu horário, seu jogo. Agende suas aulas de futevôlei com o Professor Edu.">
-<meta property="og:image" content="https://images.unsplash.com/photo-1544298621-35883ce5354e?w=1200&h=630&fit=crop">
+<meta property="og:image" content="https://images.unsplash.com/photo-1762341582102-ddc9d47dfcba?w=1200&h=630&fit=crop&auto=format">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B4F6C">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230B4F6C'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23FF6B35'/%3E%3C/svg%3E">
@@ -90,6 +90,8 @@
   .btn-primary:hover{ background:var(--energy-deep); }
   .btn-outline{ background:transparent; color:var(--ocean-deep); border:1.5px solid var(--ocean-deep); }
   .btn-outline:hover{ background:var(--ocean-deep); color:var(--white); }
+  .hero .btn-outline{ color:var(--white); border-color:rgba(255,255,255,.7); }
+  .hero .btn-outline:hover{ background:var(--white); color:var(--ocean-deep); }
   .btn-ghost{ background: rgba(11,79,108,0.08); color:var(--ocean-deep); }
   .btn-ghost:hover{ background: rgba(11,79,108,0.16); }
   .btn-dark{ background:var(--ocean-deep); color:var(--white); }
@@ -100,9 +102,42 @@
 
   .hero{
     position:relative; padding: 40px 6% 90px; overflow:hidden;
-    background: radial-gradient(120% 100% at 85% 0%, rgba(46,196,182,0.16), transparent 60%);
   }
-  .hero-grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap:50px; align-items:center; }
+  /* ---------- Fundo real: vídeo do saque renderizado (HyperFrames) + foto ambiente ---------- */
+  .hero-bg{ position:absolute; inset:0; z-index:0; overflow:hidden; background:var(--ocean-deep); }
+  .hero-bg video, .hero-bg img{
+    position:absolute; top:50%; left:50%; width:calc(100% + 70px); height:calc(100% + 70px);
+    object-fit:cover; object-position:center 22%;
+  }
+  .hero-serve-video{
+    transform:translate(-50%,-50%); z-index:1; opacity:1;
+    filter:saturate(1.08) contrast(1.03) brightness(.95);
+    transition: opacity 1s ease;
+  }
+  .hero-serve-video.is-hidden{ opacity:0; pointer-events:none; }
+  .hero-bg img{
+    --px: 0px; --py: 0px;
+    transform:translate(calc(-50% + var(--px)), calc(-50% + var(--py))) scale(1.08);
+    filter:saturate(1.08) contrast(1.03) brightness(.92);
+    animation: heroKenBurns 26s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes heroKenBurns{
+    0%{ transform:translate(calc(-50% + var(--px)), calc(-50% + var(--py))) scale(1.08); }
+    100%{ transform:translate(calc(-52% + var(--px)), calc(-48% + var(--py))) scale(1.18); }
+  }
+  .hero-bg::after{
+    content:''; position:absolute; inset:0; z-index:2;
+    background:
+      linear-gradient(100deg, rgba(7,58,80,.95) 0%, rgba(7,58,80,.86) 24%, rgba(7,58,80,.52) 48%, rgba(7,58,80,.18) 68%, rgba(7,58,80,.05) 84%),
+      linear-gradient(0deg, var(--sand) -4%, rgba(241,229,200,0) 16%);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-bg img{ animation:none; }
+    .hero-serve-video{ display:none; }
+  }
+
+  .hero-grid{ position:relative; z-index:2; display:grid; grid-template-columns: 1.05fr .95fr; gap:50px; align-items:center; }
   .eyebrow{
     display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12.5px;
     color:var(--ocean-deep); background: rgba(255,255,255,0.6); border:1px solid var(--sand-deep);
@@ -111,31 +146,38 @@
   .eyebrow .ball{ width:8px; height:8px; border-radius:50%; background:var(--energy);}
   h1.hero-title{
     font-family: var(--font-display); font-size: clamp(40px, 5.4vw, 72px); line-height:0.98;
-    color: var(--ocean-deep); letter-spacing:.01em; margin-bottom:22px;
+    color: var(--white); letter-spacing:.01em; margin-bottom:22px; text-shadow: 0 4px 24px rgba(0,0,0,.25);
   }
   h1.hero-title em{ font-style:normal; color:var(--energy); }
-  .hero-sub{ font-size:18px; line-height:1.6; color:rgba(30,43,43,0.75); max-width:480px; margin-bottom:34px; }
+  .hero-sub{ font-size:18px; line-height:1.6; color:rgba(255,255,255,0.82); max-width:480px; margin-bottom:34px; }
   .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
   .hero-stats{ display:flex; gap:34px; flex-wrap:wrap; }
-  .hero-stat b{ display:block; font-family:var(--font-display); font-size:28px; color:var(--ocean-deep); }
-  .hero-stat span{ font-size:12.5px; color:rgba(30,43,43,0.6); font-weight:600; }
+  .hero-stat b{ display:block; font-family:var(--font-display); font-size:28px; color:var(--white); }
+  .hero-stat span{ font-size:12.5px; color:rgba(255,255,255,0.68); font-weight:600; }
 
   .hero-visual{ position:relative; }
+  /* ---------- Glass "next class" badge floating over the real photo ---------- */
   .court-card{
-    background: linear-gradient(160deg, var(--ocean-deep), var(--ocean-light));
-    border-radius: var(--radius-lg); padding:34px; color:var(--white); position:relative;
-    box-shadow: var(--shadow); overflow:hidden;
+    background: rgba(7,58,80,0.42); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    border-radius: var(--radius-lg); padding:26px 28px; color:var(--white); position:relative;
+    box-shadow: var(--shadow); border:1px solid rgba(255,255,255,0.22);
   }
-  .court-card::after{
-    content:''; position:absolute; inset:0; background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 2px, transparent 2px 34px);
-    pointer-events:none;
+  .court-live{
+    display:flex; align-items:center; gap:8px; margin:18px 0; font-family:var(--font-mono);
+    font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.85);
   }
-  .court-net{ position:relative; height:150px; margin: 18px 0 26px; }
-  .net-line{ position:absolute; left:0; right:0; top:50%; height:2px; background: rgba(255,255,255,0.5); }
-  .net-post{ position:absolute; top:8%; bottom:50%; width:3px; background: rgba(255,255,255,0.5); }
-  .net-post.left{ left:6%; } .net-post.right{ right:6%; }
-  .ball-arc-svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .court-live .dot-live{
+    width:9px; height:9px; border-radius:50%; background:var(--energy);
+    box-shadow:0 0 0 0 rgba(255,107,53,.6); animation: liveDot 1.8s ease-out infinite;
+  }
+  @keyframes liveDot{
+    0%{ box-shadow:0 0 0 0 rgba(255,107,53,.55); }
+    70%{ box-shadow:0 0 0 9px rgba(255,107,53,0); }
+    100%{ box-shadow:0 0 0 0 rgba(255,107,53,0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .court-live .dot-live{ animation:none; }
+  }
   .court-caption{ position:relative; display:flex; justify-content:space-between; align-items:flex-end; }
   .court-caption .lvl{ font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.7; }
   .court-caption .who{ font-family:var(--font-display); font-size:22px; }
@@ -154,6 +196,35 @@
   .section-title{ font-family:var(--font-display); font-size: clamp(28px,3.4vw,42px); color:var(--ocean-deep); line-height:1.05; }
   .section-title span{ color:var(--energy); }
   .section-desc{ margin-top:14px; font-size:16px; color:rgba(30,43,43,0.7); line-height:1.6; }
+
+  /* ---------- Vitrine do professor: foto real com efeito de scan 3D (Three.js) ---------- */
+  .prof-showcase{ display:grid; grid-template-columns: 1fr 1fr; gap:60px; align-items:center; }
+  .prof-stats{ display:flex; gap:32px; list-style:none; margin-top:26px; flex-wrap:wrap; }
+  .prof-stats li{ display:flex; flex-direction:column; }
+  .prof-stats b{ font-family:var(--font-display); font-size:26px; color:var(--ocean-deep); }
+  .prof-stats span{ font-size:12px; color:rgba(30,43,43,.6); font-weight:600; }
+  .prof-scan{
+    position:relative; aspect-ratio: 738 / 656; border-radius: var(--radius-lg); overflow:hidden;
+    background: var(--ocean-deep); box-shadow: var(--shadow);
+  }
+  .prof-scan canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1; }
+  .prof-scan-fallback{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; transition:opacity .4s ease; }
+  .prof-scan-caption{
+    position:absolute; left:0; right:0; bottom:0; z-index:2; padding:20px 22px;
+    display:flex; justify-content:space-between; align-items:flex-end; pointer-events:none;
+    background: linear-gradient(0deg, rgba(7,58,80,.75), transparent);
+  }
+  .prof-scan-caption b{ font-family:var(--font-display); font-size:20px; color:#fff; display:block; }
+  .prof-scan-caption span{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.75); }
+  .prof-scan-tag{
+    position:absolute; top:18px; left:18px; z-index:2; display:flex; align-items:center; gap:7px;
+    font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em;
+    color:#fff; background:rgba(7,58,80,.55); backdrop-filter:blur(6px); padding:6px 12px; border-radius:999px;
+    pointer-events:none;
+  }
+  .prof-scan-tag .dot-live{ width:7px; height:7px; border-radius:50%; background:var(--aqua); animation: liveDot 1.8s ease-out infinite; }
+  @media (max-width:1100px){ .prof-showcase{ grid-template-columns:1fr; } }
+  @media (prefers-reduced-motion: reduce){ .prof-scan-tag .dot-live{ animation:none; } }
 
   .schedule-strip{ background: var(--white); border-radius: var(--radius-lg); padding:36px; box-shadow:var(--shadow); }
   .schedule-strip-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
@@ -428,7 +499,15 @@
   </header>
 
   <div class="hero">
-    <div class="hero-grid">
+    <div class="hero-bg" id="hero-bg">
+      <video id="hero-serve-video" class="hero-serve-video" muted playsinline autoplay preload="auto"
+        poster="https://images.unsplash.com/photo-1762341582102-ddc9d47dfcba?w=2000&q=80&fm=jpg&fit=crop&auto=format">
+        <source src="assets/team-fe-hero.mp4" type="video/mp4">
+      </video>
+      <img id="hero-bg-photo" src="https://images.unsplash.com/photo-1762341582102-ddc9d47dfcba?w=1400&q=80&fm=jpg&fit=crop&auto=format" alt="Jogador de futevôlei fazendo bicicleta para acertar a bola com o pé, na praia" loading="eager">
+    </div>
+
+    <div class="hero-grid" id="hero-grid">
       <div>
         <div class="eyebrow"><span class="ball"></span> Aulas de segunda a sexta · Prof. Edu</div>
         <h1 class="hero-title">Sua areia,<br>seu <em>horário</em>,<br>seu jogo.</h1>
@@ -455,14 +534,7 @@
             </div>
             <div class="lvl">3 de 8 vagas</div>
           </div>
-          <div class="court-net">
-            <div class="net-post left"></div><div class="net-post right"></div>
-            <div class="net-line"></div>
-            <svg class="ball-arc-svg" viewBox="0 0 400 150" preserveAspectRatio="none">
-              <path d="M20,120 Q100,10 200,75 Q300,140 380,20" stroke="#FF6B35" stroke-width="3" fill="none" stroke-dasharray="2 10" stroke-linecap="round"/>
-              <circle cx="380" cy="20" r="7" fill="#FF6B35"/>
-            </svg>
-          </div>
+          <div class="court-live"><span class="dot-live"></span> Ao vivo na areia agora</div>
           <div class="court-caption">
             <div class="lvl">Praia · Areia · Sol</div>
             <div class="lvl">Prof. Edu</div>
@@ -503,6 +575,28 @@
         <span class="level-tag">Exclusiva · Sextas 15:30</span>
         <h3>Feminina</h3>
         <p>Turma exclusiva para mulheres, nível Iniciante, às sextas-feiras das 15:30 às 16:30.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:#fff;" id="professor-section">
+    <div class="prof-showcase reveal">
+      <div>
+        <div class="section-eyebrow">O professor</div>
+        <h2 class="section-title">Treinado na areia, <span>dedicado a você</span></h2>
+        <p class="section-desc">Prof. Edu acompanha pessoalmente cada turma, do primeiro toque na bola até a evolução técnica mais avançada — segunda a sexta, na praia.</p>
+        <ul class="prof-stats">
+          <li><b>100%</b><span>das aulas com o Edu</span></li>
+          <li><b>4</b><span>níveis de ensino</span></li>
+          <li><b>5x</b><span>por semana</span></li>
+        </ul>
+      </div>
+      <div class="prof-scan" id="prof-scan">
+        <img class="prof-scan-fallback" id="prof-scan-fallback" src="assets/prof-edu.webp" alt="Prof. Edu" loading="lazy">
+        <div class="prof-scan-tag"><span class="dot-live"></span> Scan ao vivo</div>
+        <div class="prof-scan-caption">
+          <div><b>Prof. Edu</b><span>Futevôlei · Todos os níveis</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1049,6 +1143,188 @@
     })
   }, { threshold: 0.15 })
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
+
+  // foto real de fundo do hero: paralaxe sutil do mouse na cena de futevôlei
+  const heroBg = document.getElementById('hero-bg')
+  const heroSection = document.querySelector('.hero')
+  if (heroBg && heroSection && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const heroImg = heroBg.querySelector('img')
+    let rafId = null
+    let targetX = 0, targetY = 0
+
+    const applyParallax = () => {
+      heroImg.style.setProperty('--px', `${(targetX * 16).toFixed(2)}px`)
+      heroImg.style.setProperty('--py', `${(targetY * 10).toFixed(2)}px`)
+      rafId = null
+    }
+
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect()
+      targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2
+      targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2
+      if (rafId === null) rafId = requestAnimationFrame(applyParallax)
+    })
+
+    heroSection.addEventListener('mouseleave', () => {
+      targetX = 0; targetY = 0
+      if (rafId === null) rafId = requestAnimationFrame(applyParallax)
+    })
+  }
+
+  // intro do saque: vídeo real (renderizado com HyperFrames) toca uma vez, depois some e revela o conteúdo
+  ;(function initServeVideo(){
+    const heroGrid = document.getElementById('hero-grid')
+    const video = document.getElementById('hero-serve-video')
+    if (!heroGrid) return
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduced || !video) {
+      heroGrid.style.opacity = '1'
+      return
+    }
+
+    heroGrid.style.opacity = '0'
+    heroGrid.style.transform = 'translateY(14px)'
+    heroGrid.style.transition = 'opacity .7s ease, transform .7s ease'
+
+    let revealed = false
+    const reveal = () => {
+      if (revealed) return
+      revealed = true
+      heroGrid.style.opacity = '1'
+      heroGrid.style.transform = 'translateY(0)'
+      video.classList.add('is-hidden')
+    }
+
+    video.addEventListener('ended', reveal)
+    video.addEventListener('error', reveal)
+    video.play?.().catch(reveal)
+    setTimeout(reveal, 6000) // salvaguarda caso o vídeo trave ou não dispare 'ended'
+  })()
+</script>
+
+<!-- ===================================================================
+     VITRINE DO PROFESSOR — efeito de scan 3D (Three.js) sobre a foto real
+     =================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+  const container = document.getElementById('prof-scan')
+  const fallbackImg = document.getElementById('prof-scan-fallback')
+  if (container && fallbackImg && window.THREE) initProfScan()
+
+  function initProfScan() {
+    const THREE = window.THREE
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    let renderer
+    try {
+      const canvas = document.createElement('canvas')
+      container.insertBefore(canvas, fallbackImg.nextSibling)
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true })
+    } catch (e) {
+      return // sem WebGL: fica só a foto normal
+    }
+
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 10)
+    camera.position.z = 3.4
+
+    const group = new THREE.Group()
+    scene.add(group)
+
+    const geo = new THREE.PlaneGeometry(2.6, 2.6 * (656 / 738), 48, 48)
+
+    const safeRender = () => { try { renderer.render(scene, camera) } catch (e) {} }
+
+    const texture = new THREE.TextureLoader().load(fallbackImg.src, () => {
+      fallbackImg.style.opacity = '0'
+      safeRender() // garante 1 frame renderizado assim que a textura estiver pronta
+    })
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.generateMipmaps = false
+    texture.minFilter = THREE.LinearFilter
+    texture.magFilter = THREE.LinearFilter
+
+    const photoMesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: texture }))
+    group.add(photoMesh)
+
+    const wireMat = new THREE.MeshBasicMaterial({ color: 0x2EC4B6, wireframe: true, transparent: true, opacity: 0.4 })
+    const wireMesh = new THREE.Mesh(geo, wireMat)
+    wireMesh.position.z = 0.02
+    group.add(wireMesh)
+
+    const scanGeo = new THREE.PlaneGeometry(2.6, 0.03)
+    const scanMat = new THREE.MeshBasicMaterial({ color: 0xFF6B35, transparent: true, opacity: 0.85 })
+    const scanLine = new THREE.Mesh(scanGeo, scanMat)
+    scanLine.position.z = 0.03
+    group.add(scanLine)
+
+    const baseVerts = geo.attributes.position.array.slice()
+
+    function resize() {
+      const w = container.clientWidth, h = container.clientHeight
+      if (!w || !h) return
+      renderer.setSize(w, h, false)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+      camera.aspect = w / h
+      camera.updateProjectionMatrix()
+      safeRender() // resize() limpa o buffer do canvas; sempre repintar em seguida
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    let targetRX = 0, targetRY = 0
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect()
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2
+      targetRY = x * 0.28
+      targetRX = -y * 0.2
+    })
+    container.addEventListener('mouseleave', () => { targetRY = 0; targetRX = 0 })
+
+    let visible = false
+    new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        visible = en.isIntersecting
+        if (visible) safeRender() // reentrar na viewport também força repintura imediata
+      })
+    }, { threshold: 0.1 }).observe(container)
+
+    // salvaguardas: cobrem ambientes que suspendem rAF ou onde a textura demora a decodificar
+    ;[50, 200, 400, 900, 1800].forEach(ms => setTimeout(safeRender, ms))
+
+    if (reduced) {
+      safeRender()
+      return // estático: sem loop de animação
+    }
+
+    const clock = new THREE.Clock()
+    function tick() {
+      requestAnimationFrame(tick)
+      if (!visible) return
+      const t = clock.getElapsedTime()
+
+      group.rotation.y += (targetRY - group.rotation.y) * 0.06
+      group.rotation.x += (targetRX - group.rotation.x) * 0.06
+
+      const pos = geo.attributes.position
+      for (let i = 0; i < pos.count; i++) {
+        const ix = i * 3
+        const bx = baseVerts[ix], by = baseVerts[ix + 1]
+        pos.array[ix + 2] = Math.sin(bx * 2.2 + t * 1.4) * Math.cos(by * 2.2 + t * 1.1) * 0.025
+      }
+      pos.needsUpdate = true
+
+      const scanY = ((t * 0.35) % 1.3) - 0.65
+      scanLine.position.y = scanY * (2.6 * (656 / 738) / 2)
+      scanMat.opacity = 0.55 + Math.sin(t * 6) * 0.2
+
+      safeRender()
+    }
+    tick()
+  }
 </script>
 
 <!-- ===================================================================
